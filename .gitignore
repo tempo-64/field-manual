@@ -1,0 +1,6 @@
+.env
+*.key
+*.pem
+.claude/
+.remember/
+.DS_Store
