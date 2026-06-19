@@ -306,7 +306,49 @@ Skipping orientation is how you get an agent that "fixes" something that was alr
 
 ---
 
-## 8. Anti-Patterns
+## 8. Working with Multiple Agents
+
+As projects grow, you'll use multiple agents — a builder, a reviewer, parallel investigators, specialized subagents. These patterns, drawn from multi-agent production work and Anthropic's harness research, help you coordinate them.
+
+### Builder/reviewer separation
+
+The agent that wrote the code should not be the sole evaluator of the code. This is Anthropic's most consistent finding: agents reliably praise their own work. The fix is structural, not prompting — use a separate context, separate prompt, and separate evaluation criteria for review.
+
+The cycle: **build** (agent implements a slice) → **self-test** (agent runs tests) → **review** (different agent or human reviews the diff against the spec) → **human stop** (you decide whether to continue).
+
+### Narrow review scopes
+
+Broad review prompts ("review the whole codebase") time out or produce shallow results on any non-trivial project. Each review should name the exact changed files, the spec they should match, and the specific concerns to check.
+
+Good: "Review the diff in `src/auth.py` and `tests/test_auth.py` against the JWT spec in the design doc."
+
+Bad: "Review all the changes and make sure everything looks good."
+
+### Human stop points
+
+Without explicit stops between slices, agents chain work indefinitely. Each chained step inherits and amplifies any drift from the plan. Build natural stopping points where you evaluate direction, not just correctness.
+
+The stop isn't "does the code work?" — it's "is this still building toward what I want?"
+
+### AI can veto but cannot approve
+
+Agents can reject work that fails invariants — a test suite, a linter, a security check. But final approval to merge and ship requires human judgment. This is the authority boundary: agents enforce constraints, humans make acceptance decisions.
+
+### Drafts vs. canonical artifacts
+
+When agents produce work products (not just code — reports, analyses, decisions), treat them as drafts until a human or policy engine promotes them. The boundary should be structural, not just social: agent output is labeled as draft, and promotion to canonical status is a separate, auditable step.
+
+Without this boundary, AI can effectively self-certify its own work. The draft/canonical split makes human review a part of the system, not just a good intention.
+
+### Parallel investigation, not parallel implementation
+
+Multiple agents investigating different hypotheses simultaneously (debugging, research, code archaeology) is a superpower. Multiple agents implementing code in parallel usually causes problems — merge conflicts, inconsistent patterns, duplicate work.
+
+Use parallelism for divergent work (investigation). Use sequential work for convergent work (implementation).
+
+---
+
+## 9. Anti-Patterns
 
 These are specific failure modes observed across many projects. Each one is tempting, common, and expensive.
 
@@ -390,6 +432,13 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Run the feature yourself — type checks verify code, not features
 - [ ] Separate who builds from who evaluates
 - [ ] Update progress artifacts for session continuity
+
+### When using multiple agents
+- [ ] Separate who builds from who reviews — different context, different prompt
+- [ ] Narrow review scopes — name exact files and spec, not "review everything"
+- [ ] Build in human stop points between slices
+- [ ] AI enforces constraints; humans make acceptance decisions
+- [ ] Use parallel agents for investigation, sequential for implementation
 
 ### Every session start
 - [ ] Orient: read progress, task list, recent git history
