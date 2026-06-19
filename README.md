@@ -6,6 +6,7 @@ Practical engineering with AI coding agents — grounded in evidence, not vibes.
 
 - **[FIELD-MANUAL.md](FIELD-MANUAL.md)** — The guide. Universal practices for building software with AI coding agents, drawn from research, practitioner experience, and observed patterns across thousands of projects.
 - **[STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md)** — A ready-to-use CLAUDE.md / AGENTS.md template to drop into new projects, with adaptation guides for different project types.
+- **[AGENTS.md](AGENTS.md)** — The repo-local operating contract for maintaining this manual itself.
 
 ## Who This Is For
 
