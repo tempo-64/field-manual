@@ -394,6 +394,18 @@ Every session should start with orientation: read the current state, check what'
 
 Skipping orientation is how you get an agent that "fixes" something that was already working, or builds on top of a broken foundation from the previous session.
 
+### Keep one rolling plan, and automate the trigger
+
+A state file records where you are. It does not, by itself, keep you on course toward where you are going. On long builds the forward plan tends to scatter across half-current documents or live only in the builder's head, and re-planning happens only when someone remembers to do it -- which, across enough sessions, they don't. The result is drift: each session re-derives the goal from partial memory and slowly wanders.
+
+Two practices fix this:
+
+- **One current plan, rolling-wave.** Keep exactly one plan that runs from now to done. Detail the next step, sketch the rest, and regenerate it at each checkpoint as the near becomes now. This is standard rolling-wave planning -- the far end is allowed to be coarse. Keep one in flight: when a plan is superseded, move the old copy to a "previous" archive instead of deleting it. Previous, not stale -- history is fuel for progressive disclosure, but only one plan is ever current. The discipline that prevents drift is having exactly one document that answers "where are we going," not many that half-do.
+
+- **Automate the trigger; do not rely on discipline.** Orienting and updating state happen reliably only when something other than memory triggers them. Surface the current plan automatically at session start -- for example, a session-start hook that prints it -- so the agent reads it instead of re-deriving. And attach the replan to an event that already happens: the green commit or merge that closes a slice. Bolting "regenerate the plan" onto an existing habit (habit-stacking) is what makes it recur, where a free-floating reminder decays.
+
+The method here -- rolling-wave planning, limiting work-in-progress to one plan, habit-stacking the replan onto the commit -- is established practice. The failure mode is treating staying-on-track as something you remember to do, rather than something the environment makes happen.
+
 ---
 
 ## 8. Working with Multiple Agents
@@ -538,6 +550,7 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Match proof to claim — tests, browser, live URL, repo state, or proof matrix as appropriate
 - [ ] Separate who builds from who evaluates
 - [ ] Update progress or state artifacts with the code when state changes
+- [ ] At a checkpoint, regenerate the single current plan and archive the previous one
 
 ### When using multiple agents
 - [ ] Separate who builds from who reviews — different context, different prompt
@@ -548,6 +561,7 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Use parallel agents for investigation, sequential for implementation
 
 ### Every session start
+- [ ] Read the one current rolling plan (surface it automatically; don't re-derive it)
 - [ ] Orient: read progress, task list, recent git history
 - [ ] Establish the current authority order — repo, docs, and git before memory or stale output
 - [ ] Verify baseline: confirm existing functionality still works
