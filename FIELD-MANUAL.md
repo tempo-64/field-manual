@@ -142,7 +142,31 @@ This is not a rule against dependencies. It is a rule against casual dependencie
 
 ---
 
-## 3. Before You Write Code
+## 3. Deciding What to Build
+
+The manual so far assumes you already know what to build and are ready to spec it. Often the harder work comes first: deciding what's worth building, sharpening a fuzzy intent into a thesis, and pressure-testing it before a line of code exists. Agents are useful partners here too — but the failure modes differ from the build, so the practices differ.
+
+*Observed patterns from production strategy and design sessions, not formal research — labeled as such.*
+
+### Define the pass before you run it
+
+A strategy or design session drifts the same way a build does: with no defined target, you wander. Before doing the work, define the work — the same discipline as a spec, one level up. State the **question it answers**, the **output that counts as done**, and what is **out of scope**. "Let's figure out our positioning" wanders; "produce a one-paragraph positioning lead and a ranked list of product moves, for this buyer, by end of session" converges.
+
+### The agent's job is to sharpen the thesis, not agree with it
+
+Founders and architects think out loud toward conviction — half-formed, circling, "I'm probably babbling." The agent's value is not to nod along; it is to **crystallize what you are reaching for more sharply than you said it**, name it, and then **stress-test it**: the strongest counter-argument, the honest risks, the place the idea has a ceiling. Conceding when your argument is stronger than the agent's is part of the job, not a failure of it. A strategy session where the agent only validates is as worthless as a code review where the reviewer only praises — and more dangerous, because there is no test suite to catch a bad idea.
+
+### Claims outrun proof in strategy too
+
+"Match proof to the claim" (§7) is not only for code. A positioning claim, a competitor characterization, a "we're better at X" — each can outrun its evidence. Verify competitor claims against primary sources before building strategy on them. Mark "we're better" as demonstrable-now, or flag it as a hypothesis. A guarantee you cannot yet prove becomes a stated **design bar** until the proof exists, not a promise. A wrong strategy claim costs more than a wrong line of code, because you build on it.
+
+### Sync the operating model when it drifts
+
+The sharpest friction is rarely a single decision — it is an unspoken mismatch about *how you build*: what "good" means, how much scope is right, how fast to move. When the agent keeps recommending one way and you keep correcting it, stop and **re-sync the operating model explicitly** instead of re-litigating each instance. Name the principle, write it down, and proceed from the shared rule. One alignment conversation prevents twenty corrections.
+
+---
+
+## 4. Before You Write Code
 
 ### Specs before code
 
@@ -187,7 +211,7 @@ This front-loads the thinking about edge cases, failure modes, and acceptance cr
 
 ---
 
-## 4. The Build
+## 5. The Build
 
 ### Small, verifiable steps
 
@@ -236,7 +260,7 @@ Commits aren't ceremony. They're save points.
 
 ---
 
-## 5. Working Together
+## 6. Working Together
 
 ### Give full errors, not summaries
 
@@ -280,7 +304,7 @@ The agent can always re-read a file. It can't always recall a decision from 50 m
 
 ---
 
-## 6. Quality and Verification
+## 7. Quality and Verification
 
 ### Automated gates are force multipliers
 
@@ -346,7 +370,7 @@ If the proof is weaker than the prose, weaken the prose. Honest "not yet" sectio
 
 ---
 
-## 7. Scaling Across Sessions
+## 8. Scaling Across Sessions
 
 ### The session continuity problem
 
@@ -408,7 +432,7 @@ The method here -- rolling-wave planning, limiting work-in-progress to one plan,
 
 ---
 
-## 8. Working with Multiple Agents
+## 9. Working with Multiple Agents
 
 As projects grow, you'll use multiple agents — a builder, a reviewer, parallel investigators, specialized subagents. These patterns, drawn from multi-agent production work and Anthropic's harness research, help you coordinate them.
 
@@ -417,6 +441,12 @@ As projects grow, you'll use multiple agents — a builder, a reviewer, parallel
 The agent that wrote the code should not be the sole evaluator of the code. This is Anthropic's most consistent finding: agents reliably praise their own work. The fix is structural, not prompting — use a separate context, separate prompt, and separate evaluation criteria for review.
 
 The cycle: **build** (agent implements a slice) → **self-test** (agent runs tests) → **review** (different agent or human reviews the diff against the spec) → **human stop** (you decide whether to continue).
+
+### Two-stage review, and match the model to the task
+
+When a separate agent reviews, split the review into two passes, in order: **spec-compliance first** (did it build what was asked — nothing missing, nothing extra?), then **code-quality** (is what it built well-made?). Running quality review before spec-compliance wastes effort polishing the wrong thing. Each finding goes back to the *same* implementer to fix, then the reviewer re-checks — don't move on with an open finding, and don't let the implementer's self-review stand in for the separate review.
+
+Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical — spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
 
 ### Narrow review scopes
 
@@ -458,7 +488,7 @@ If a stale message and the repo disagree, trust the repo and correct the durable
 
 ---
 
-## 9. Anti-Patterns
+## 10. Anti-Patterns
 
 These are specific failure modes observed across many projects. Each one is tempting, common, and expensive.
 
@@ -492,6 +522,10 @@ When the agent hits infrastructure friction — a test that's hard to write, a c
 
 Cutting features, removing edge cases, or simplifying requirements without explicitly acknowledging the reduction. Deferral is fine — silence about it is not. If scope changes, say what changed and why. This applies to both you and the agent.
 
+### Recommending on effort, not merit
+
+Related to silent scope reduction, but about the *justification*: the agent (or you) steers toward the smaller or faster option and dresses it as discipline — "let's just get it green," "this is less code," "the more finishable version." Effort and size are real considerations, but they are not *merits*. A recommendation should stand on correctness, the product's actual bar, and genuine risk — not on being easier. When the words "land it green," "least code," or "more finishable" are carrying the argument, that's the smell: re-justify on merit, and if you are deferring scope, defer it openly.
+
 ### Over-engineering for hypothetical futures
 
 Building abstractions, helpers, or frameworks for requirements that don't exist yet. Three similar lines of code is better than a premature abstraction. The right amount of complexity is what the task actually requires, not what it might someday need.
@@ -518,7 +552,7 @@ Agents are good at making product language sound complete. That creates a subtle
 
 ---
 
-## 10. The Practices at a Glance
+## 11. The Practices at a Glance
 
 A one-page reference for the practices in this guide, ordered by when they matter.
 
