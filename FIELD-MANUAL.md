@@ -562,6 +562,12 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Set up automated quality gates (tests, linter, type checker, formatter)
 - [ ] Establish git workflow (branch per feature, conventional commits)
 
+### Before you decide what to build (a strategy or design pass)
+- [ ] Define the pass first — its question, the output that counts as done, what's out of scope
+- [ ] Agent sharpens and stress-tests the thesis; it doesn't just agree
+- [ ] Verify competitor / strategy claims against primary sources before building on them
+- [ ] When you keep colliding on *how* to build, stop and sync the operating model explicitly
+
 ### Before each feature
 - [ ] Write a work packet — goal, behavior, files, out of scope, checks, stop point, rollback
 - [ ] Design verification alongside the feature, not after
@@ -600,6 +606,26 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Establish the current authority order — repo, docs, and git before memory or stale output
 - [ ] Verify baseline: confirm existing functionality still works
 - [ ] Then build
+
+---
+
+## Worked Example: One Slice, End to End
+
+*Anonymized from a real session — a deterministic developer-tooling product. It threads the practices together in sequence; the specifics are scrubbed.*
+
+**Deciding what to build (§3).** The session opened with a vague intent: "do it better than the incumbent." Undefined, that wanders. We **defined the pass first** — its question ("what makes us the obvious choice for this buyer, and what must we build to make it true?"), its output (a one-paragraph positioning lead plus a ranked list of product moves), and what was out of scope (pricing, go-to-market). Then we ran it: the human thought out loud toward a thesis; the agent's job was to **sharpen and stress-test it**, not agree — naming the strongest counter-argument, and conceding when the human's timing argument turned out to be the better one. A competitor claim the whole strategy leaned on was **verified against the incumbent's own materials before** we built on it (claims outrun proof in strategy too).
+
+**Spec before code (§4).** The chosen slice got a short design doc — what it does, which files, how to verify, what it explicitly does not do — reviewed and approved before any implementation.
+
+**The build, via subagents (§5, §9).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents — spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
+
+**What the separation caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see** — a value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Builder/reviewer separation (§9) earning its cost in one stroke.
+
+**The operating-model sync (§3).** Midway, the human and agent kept colliding — the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." Written down, the friction stopped.
+
+**Finishing (§7, §8).** Done meant green — full suite, linters, types — verified by the human's own eyes on the diff, not the agent's summary. State files and the one rolling plan were updated in the same arc, and the work merged on green.
+
+The whole session is just the manual's practices in sequence. None of it was improvised; all of it was the method.
 
 ---
 
