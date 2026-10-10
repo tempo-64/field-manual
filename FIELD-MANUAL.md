@@ -1,14 +1,14 @@
 # The Solo Builder's Field Manual
 
-Practical engineering with AI coding agents — grounded in evidence, not vibes.
+Practical engineering with AI coding agents, grounded in evidence.
 
 ## What This Is
 
-This is a field manual for software engineers who build real products with AI coding agents. Not a tutorial on which buttons to click. Not a methodology framework with templates and ceremonies. A concise set of practices that actually work, drawn from research, practitioner experience, and pattern observation across thousands of projects.
+This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and pattern observation across thousands of projects. It does not cover which buttons to click, and it adds no methodology framework, templates, or ceremonies.
 
-These practices are **agent-agnostic** — they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic** — the principles transfer across languages, frameworks, and domains.
+These practices are **agent-agnostic**: they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic**: the principles transfer across languages, frameworks, and domains.
 
-**Who this is for:** A software engineer (any level) working with one or more AI coding agents to build software that other people will use. "Solo builder" means you're the human — you might have multiple agents, but you're the one with the vision, the taste, and the accountability.
+**Who this is for:** A software engineer (any level) working with one or more AI coding agents to build software that other people will use. "Solo builder" means you're the human. You might have multiple agents, but you're the one with the vision, the taste, and the accountability.
 
 **Who this is not for:** Teams building AI agents themselves, managers evaluating AI tools, or people looking for a specific tool tutorial.
 
@@ -16,10 +16,10 @@ These practices are **agent-agnostic** — they apply whether you're using Claud
 
 Every practice in this guide meets at least one of these bars:
 
-- **Independently converged** — multiple practitioners discovered it separately (strongest signal)
-- **Empirically researched** — backed by studies with data, not just anecdotes
-- **Observed pattern** — consistent across many projects but not yet formally studied
-- **Dated incident** — a specific failure on a real project, recorded with the date and the rule that came out of it. Several practices in sections 5 through 11 carry their incident in the text.
+- **Independently converged:** multiple practitioners discovered it separately (strongest signal)
+- **Empirically researched:** backed by studies with data, not just anecdotes
+- **Observed pattern:** consistent across many projects but not yet formally studied
+- **Dated incident:** a specific failure on a real project, recorded with the date and the rule that came out of it. Several practices in sections 5 through 11 carry their incident in the text.
 
 Opinions are labeled as opinions. Preferences are left out. When evidence is thin, that's noted.
 
@@ -31,19 +31,19 @@ Key sources: Anthropic's engineering research and agentic coding studies (~400K 
 
 ### You're the architect. The agent is the builder.
 
-Anthropic's study of ~400,000 coding sessions found that in a typical session, **the human makes most of the planning decisions** (what to do) and **the agent makes most of the execution decisions** (how to do it). This isn't a limitation to work around — it's the model that works.
+Anthropic's study of ~400,000 coding sessions found that in a typical session, **the human makes most of the planning decisions** (what to do) and **the agent makes most of the execution decisions** (how to do it). This split is the model that works.
 
 The same study found that **domain expertise, not coding background**, is the primary predictor of session success. Every major occupation succeeds at nearly the same rate as software engineers. The more domain expertise you bring, the more work the agent does per instruction, and the more likely the session succeeds.
 
 What this means in practice:
 
-- **Your value is in the what and the why** — which features matter, what the user needs, what trade-offs to make, when to say no
-- **The agent's value is in the how** — consistent implementation, breadth of knowledge, tireless execution, catching what you skip
-- **Neither side is a rubber stamp** — the agent should push back when your idea has problems, and you should push back when the agent's implementation has problems
+- **Your value is in the what and the why:** which features matter, what the user needs, what trade-offs to make, when to say no
+- **The agent's value is in the how:** consistent implementation, breadth of knowledge, tireless execution, catching what you skip
+- **Neither side is a rubber stamp:** the agent should push back when your idea has problems, and you should push back when the agent's implementation has problems
 
 ### The product gets better because both sides push back
 
-This is not "human supervises bot" or "tool assists human." The best results come from honest friction. If the agent thinks an approach is wrong, it should say so. If you think the agent over-engineered something, say so. Polite agreement produces mediocre work.
+Both sides bring judgment to the work. The best results come from honest friction. If the agent thinks an approach is wrong, it should say so. If you think the agent over-engineered something, say so. Polite agreement produces mediocre work.
 
 Anti-pattern to watch for: **performative agreement**. When you give feedback, some agents will immediately agree and implement without evaluating whether the feedback is technically correct. Good agents push back when your feedback would make things worse.
 
@@ -53,26 +53,26 @@ Anti-pattern to watch for: **performative agreement**. When you give feedback, s
 
 ### The project operating manual
 
-Every project needs a file that tells the agent how to work in this specific codebase. Most tools call this `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, or similar — the name varies but the purpose is universal. By early 2026, this format is read natively by Claude Code, OpenAI Codex CLI, Cursor, Aider, Devin, GitHub Copilot, Gemini CLI, Windsurf, and Amazon Q.
+Every project needs a file that tells the agent how to work in this specific codebase. Most tools call this `CLAUDE.md`, `AGENTS.md`, `.cursorrules`, or similar. The name varies, but the purpose is universal. By early 2026, this format is read natively by Claude Code, OpenAI Codex CLI, Cursor, Aider, Devin, GitHub Copilot, Gemini CLI, Windsurf, and Amazon Q.
 
 **What makes a good operating manual:**
 
-Think of it as what you'd tell a smart new team member on their first day. Not everything about the project — just what they need to make good decisions without asking you every five minutes.
+Think of it as what you'd tell a smart new team member on their first day. Include just what they need to make good decisions without asking you every five minutes.
 
 Include:
-- **Environment** — language versions, build tools, how to run tests, how to run the app
-- **Conventions** — code style, commit format, file organization, naming patterns
-- **Architecture** — where things live, how the system is structured, key relationships
-- **Security policy** — non-negotiable rules as specific constraints, not vague principles
-- **Domain context** — what the project does, who it's for, key terminology
+- **Environment:** language versions, build tools, how to run tests, how to run the app
+- **Conventions:** code style, commit format, file organization, naming patterns
+- **Architecture:** where things live, how the system is structured, key relationships
+- **Security policy:** non-negotiable rules as specific constraints, not vague principles
+- **Domain context:** what the project does, who it's for, key terminology
 
 Leave out:
 - Things the agent can derive from reading the code
 - Git history and recent changes (that's what `git log` is for)
 - Ephemeral state or in-progress work
-- Every convention ever discussed — keep it to the 20 that matter most
+- Every convention ever discussed (keep it to the 20 that matter most)
 
-**Keep it concise.** A 500-line file with every rule ever discussed is worse than a 100-line file with the rules that actually matter. The agent reads the entire file on every interaction — noise dilutes signal.
+**Keep it concise.** A 500-line file with every rule ever discussed is worse than a 100-line file with the rules that actually matter. The agent reads the entire file on every interaction; noise dilutes signal.
 
 **It's a living document.** Update it when you discover a new pattern that matters, and remove things that no longer apply. A stale operating manual gives the agent wrong instructions with high confidence.
 
@@ -82,18 +82,18 @@ Leave out:
 
 Multiple sources converge on this: security cannot be bolted on later when working with agents.
 
-Willison describes the **"Lethal Trifecta"** — agent access to private data + processing untrusted external content + ability to communicate externally = zero-click attack surface. Any single component is manageable, but all three together create real risk.
+Willison describes the **"Lethal Trifecta"**: agent access to private data + processing untrusted external content + ability to communicate externally = zero-click attack surface. Any single component is manageable, but all three together create real risk.
 
 Anthropic's 2026 Agentic Coding Report makes it concrete: an agent writing 1,000 PRs/week with a 1% vulnerability rate creates 10 new vulnerabilities weekly.
 
-What this means for your operating manual — encode security as **specific constraints**, not principles:
+For your operating manual, this means encoding security as **specific constraints**, not principles:
 
 ```
 # Security (non-negotiable)
 - subprocess: always list form, never shell=True
-- TLS: never verify=False — fail hard when certs are missing
+- TLS: never verify=False; fail hard when certs are missing
 - Paths: validate user-supplied components before joining (traversal prevention)
-- Secrets: never hardcode — use env vars or secret management
+- Secrets: never hardcode; use env vars or secret management
 - YAML: always safe_load(), never load()
 - SQL: always parameterized queries, never string interpolation
 - User input: validate at system boundaries
@@ -122,10 +122,10 @@ This prevents prompt-injection style content from borrowing the authority of you
 
 Agents can generate a lot of code fast. Without commits as checkpoints, a wrong turn means losing everything since the last save.
 
-- **Commit before asking the agent to make changes** — if the change goes wrong, you can revert
-- **One logical change per commit** — makes rollback granular
-- **Branch per feature or task** — isolates experimental work
-- **Conventional commits** (`feat:`, `fix:`, `refactor:`) — not ceremony, rollback indexing
+- **Commit before asking the agent to make changes:** if the change goes wrong, you can revert
+- **One logical change per commit:** makes rollback granular
+- **Branch per feature or task:** isolates experimental work
+- **Conventional commits** (`feat:`, `fix:`, `refactor:`): they serve as a rollback index
 
 ### Dependencies are design decisions
 
@@ -145,21 +145,21 @@ This is not a rule against dependencies. It is a rule against casual dependencie
 
 ## 3. Deciding What to Build
 
-The manual so far assumes you already know what to build and are ready to spec it. Often the harder work comes first: deciding what's worth building, sharpening a fuzzy intent into a thesis, and pressure-testing it before a line of code exists. Agents are useful partners here too — but the failure modes differ from the build, so the practices differ.
+The manual so far assumes you already know what to build and are ready to spec it. Often the harder work comes first: deciding what's worth building, sharpening a fuzzy intent into a thesis, and pressure-testing it before a line of code exists. Agents are useful partners here too, but the failure modes differ from the build, so the practices differ.
 
-*Observed patterns from production strategy and design sessions, not formal research — labeled as such.*
+*Observed patterns from production strategy and design sessions, not formal research (labeled as such).*
 
 ### Define the pass before you run it
 
-A strategy or design session drifts the same way a build does: with no defined target, you wander. Before doing the work, define the work — the same discipline as a spec, one level up. State the **question it answers**, the **output that counts as done**, and what is **out of scope**. "Let's figure out our positioning" wanders; "produce a one-paragraph positioning lead and a ranked list of product moves, for this buyer, by end of session" converges.
+A strategy or design session drifts the same way a build does: with no defined target, you wander. Before doing the work, define the work (the same discipline as a spec, one level up). State the **question it answers**, the **output that counts as done**, and what is **out of scope**. "Let's figure out our positioning" wanders; "produce a one-paragraph positioning lead and a ranked list of product moves, for this buyer, by end of session" converges.
 
 ### The agent's job is to sharpen the thesis, not agree with it
 
-Founders and architects think out loud toward conviction — half-formed, circling, "I'm probably babbling." The agent's value is not to nod along; it is to **crystallize what you are reaching for more sharply than you said it**, name it, and then **stress-test it**: the strongest counter-argument, the honest risks, the place the idea has a ceiling. Conceding when your argument is stronger than the agent's is part of the job, not a failure of it. A strategy session where the agent only validates is as worthless as a code review where the reviewer only praises — and more dangerous, because there is no test suite to catch a bad idea.
+Founders and architects think out loud toward conviction: half-formed, circling, "I'm probably babbling." The agent's value is to **crystallize what you are reaching for more sharply than you said it**, name it, and then **stress-test it**: the strongest counter-argument, the honest risks, the place the idea has a ceiling. Conceding when your argument is stronger than the agent's is part of the job. A strategy session where the agent only validates is as worthless as a code review where the reviewer only praises. It is also more dangerous, because there is no test suite to catch a bad idea.
 
 ### Claims outrun proof in strategy too
 
-"Match proof to the claim" (§7) is not only for code. A positioning claim, a competitor characterization, a "we're better at X" — each can outrun its evidence. Verify competitor claims against primary sources before building strategy on them. Mark "we're better" as demonstrable-now, or flag it as a hypothesis. A guarantee you cannot yet prove becomes a stated **design bar** until the proof exists, not a promise. A wrong strategy claim costs more than a wrong line of code, because you build on it.
+"Match proof to the claim" (§7) is not only for code. A positioning claim, a competitor characterization, a "we're better at X": each can outrun its evidence. Verify competitor claims against primary sources before building strategy on them. Mark "we're better" as demonstrable-now, or flag it as a hypothesis. A guarantee you cannot yet prove becomes a stated **design bar** until the proof exists, not a promise. A wrong strategy claim costs more than a wrong line of code, because you build on it.
 
 ### Design decisions need a visible artifact
 
@@ -167,7 +167,7 @@ Most people cannot ratify a design from prose, and the owner of the product is u
 
 ### Sync the operating model when it drifts
 
-The sharpest friction is rarely a single decision — it is an unspoken mismatch about *how you build*: what "good" means, how much scope is right, how fast to move. When the agent keeps recommending one way and you keep correcting it, stop and **re-sync the operating model explicitly** instead of re-litigating each instance. Name the principle, write it down, and proceed from the shared rule. One alignment conversation prevents twenty corrections.
+The sharpest friction is usually an unspoken mismatch about *how you build*: what "good" means, how much scope is right, how fast to move. When the agent keeps recommending one way and you keep correcting it, stop and **re-sync the operating model explicitly** instead of re-litigating each instance. Name the principle, write it down, and proceed from the shared rule. One alignment conversation prevents twenty corrections.
 
 ---
 
@@ -175,16 +175,16 @@ The sharpest friction is rarely a single decision — it is an unspoken mismatch
 
 ### Specs before code
 
-This is the single most universally agreed-upon practice across every source. Osmani, Willison, Anthropic, CodeScene, Donner — everyone who builds seriously with agents converges here.
+This is the single most universally agreed-upon practice across every source. Osmani, Willison, Anthropic, CodeScene, Donner: everyone who builds seriously with agents converges here.
 
 The reasoning is empirical: NxCode found that **10 minutes spent writing a clear spec saves hours of rework.** Anthropic's harness research found that agents given only high-level prompts try to "one-shot" complex projects and fail. Agents given structured specs build incrementally and succeed.
 
 A spec doesn't need to be long. It needs to answer:
 
-1. **What** — exactly what should this do, from the user's perspective?
-2. **Where** — which files, modules, or systems does this touch?
-3. **How to verify** — how will you know it works?
-4. **What it doesn't do** — explicit scope boundaries prevent agent drift
+1. **What:** exactly what should this do, from the user's perspective?
+2. **Where:** which files, modules, or systems does this touch?
+3. **How to verify:** how will you know it works?
+4. **What it doesn't do:** explicit scope boundaries prevent agent drift
 
 The spec exists so that both you and the agent are building toward the same target. Without it, the agent builds what it thinks you meant, and you discover the gap after the work is done.
 
@@ -206,11 +206,11 @@ The stop point matters. It tells the agent where to hand control back instead of
 
 Prove the architecture works with one vertical slice before expanding features. One scenario, one user journey, end to end. This practice appears independently in proof-driven development, lean product thinking, and Anthropic's harness architecture (which implements one feature per session, verifying before moving on).
 
-The instinct to build broadly first is strong — "let me set up the whole project structure, all the models, all the routes." Resist it. Breadth before proof is noise. An agent will happily scaffold an impressive-looking shell that avoids the hardest product question.
+The instinct to build broadly first is strong: "let me set up the whole project structure, all the models, all the routes." Resist it. Breadth before proof is noise. An agent will happily scaffold an impressive-looking shell that avoids the hardest product question.
 
 ### Design the verification alongside the feature
 
-Don't plan the feature first and figure out testing later. Design them together. Specify what "done" looks like — in terms of tests, in terms of observable behavior, in terms of what a user should see — before writing the implementation.
+Don't plan the feature first and figure out testing later. Design them together. Specify what "done" looks like (in terms of tests, in terms of observable behavior, in terms of what a user should see) before writing the implementation.
 
 This front-loads the thinking about edge cases, failure modes, and acceptance criteria. It also gives you a concrete stopping point, which matters with agents that will happily keep building forever if you don't define "done."
 
@@ -220,11 +220,11 @@ This front-loads the thinking about edge cases, failure modes, and acceptance cr
 
 ### Small, verifiable steps
 
-Every source converges here. Osmani: "LLMs do best when given focused prompts — implement one function, fix one bug, add one feature at a time." Anthropic's harness research: agents that try to do too much at once fail. CodeScene: smaller changes in healthy code produce fewer defects.
+Every source converges here. Osmani: "LLMs do best when given focused prompts: implement one function, fix one bug, add one feature at a time." Anthropic's harness research: agents that try to do too much at once fail. CodeScene: smaller changes in healthy code produce fewer defects.
 
 The practical heuristic: **if you can't verify a change in under two minutes, break it smaller.**
 
-This also protects you from the most expensive failure mode — the agent builds something large, you don't verify along the way, and you discover at the end that the foundation was wrong. Small steps make wrong turns cheap.
+This also protects you from the most expensive failure mode: the agent builds something large, you don't verify along the way, and you discover at the end that the foundation was wrong. Small steps make wrong turns cheap.
 
 ### Plan when choices matter, just build when they don't
 
@@ -243,25 +243,25 @@ Willison advocates TDD specifically adapted for agent workflows. The pattern:
 3. Let the agent implement until the test passes
 4. Review the implementation
 
-This works better with agents for a specific reason: **the test is an unambiguous, machine-checkable definition of "done."** Without a test, "done" is the agent's judgment — and Anthropic's research shows agents reliably skew positive when evaluating their own work. With a test, "done" is a pass/fail that neither side can talk their way around.
+This works better with agents for a specific reason: **the test is an unambiguous, machine-checkable definition of "done."** Without a test, "done" is the agent's judgment, and Anthropic's research shows agents reliably skew positive when evaluating their own work. With a test, "done" is a pass/fail that neither side can talk their way around.
 
 Write tests that verify **behavior**, not implementation details. Tests written to hit a coverage number are paperwork. Tests that describe what the system should do from the outside are specifications.
 
 ### Build complete, not fast
 
-When requirements come from real experience — months of validation, caught bugs, proven workflows — they aren't hypothetical. They're the spec. Build them complete.
+When requirements come from real experience (months of validation, caught bugs, proven workflows), they are the spec. Build them complete.
 
 The anti-pattern: agents (and some methodologies) will suggest trimming scope to a "minimal" version. This is appropriate when you're exploring an unknown problem space. It's inappropriate when you know exactly what's needed and the requirements are the distilled result of real-world use.
 
-Build each feature completely — with error handling, edge cases, tests, documentation. "We'll polish it later" is a fiction. The polish phase never arrives. Ship the feature done or don't ship it.
+Build each feature completely, with error handling, edge cases, tests, documentation. "We'll polish it later" is a fiction. The polish phase never arrives. Ship the feature done or don't ship it.
 
 ### Commit as checkpoints
 
-Commits aren't ceremony. They're save points.
+Commits are save points.
 
-- **Commit after each working step** — before asking the agent to make the next change
-- **Meaningful messages** — "feat: add user authentication with JWT" tells you what to revert to. "WIP" tells you nothing.
-- **One logical change per commit** — a commit that mixes a feature, a refactor, and a bug fix is three commits that can't be independently reverted
+- **Commit after each working step:** before asking the agent to make the next change
+- **Meaningful messages:** "feat: add user authentication with JWT" tells you what to revert to. "WIP" tells you nothing.
+- **One logical change per commit:** a commit that mixes a feature, a refactor, and a bug fix is three commits that can't be independently reverted
 - **The body says what the change does and why**, in two or three sentences. It is not the place for the defect hunt, the review findings, or the build narrative. A reader six months from now needs the decision, not the story.
 
 ---
@@ -276,9 +276,9 @@ The agent can process a 50-line stack trace in milliseconds. You summarizing it 
 
 ### Feedback shapes future behavior
 
-When the agent does something wrong, say **why**, not just "no." When it does something right in a non-obvious way, say so — validated approaches are as important to capture as corrections.
+When the agent does something wrong, say **why**, not just "no." When it does something right in a non-obvious way, say so. Validated approaches are as important to capture as corrections.
 
-Specific, directional feedback: "Don't add a try/catch here — this function should let errors propagate to the caller because the caller has the context to handle them meaningfully."
+Specific, directional feedback: "Don't add a try/catch here; this function should let errors propagate to the caller because the caller has the context to handle them meaningfully."
 
 Vague feedback: "That's wrong." (Forces the agent to guess what's wrong and why.)
 
@@ -288,9 +288,9 @@ If you find yourself giving the same feedback twice, put it in your operating ma
 
 Not every line needs the same scrutiny. Calibrate your review to the risk:
 
-- **New territory** (unfamiliar library, security-sensitive code, complex business logic) — review every line
-- **Established patterns** (another CRUD endpoint matching five existing ones) — spot-check
-- **Pure boilerplate** (test scaffolding, import reordering, formatting) — skim
+- **New territory** (unfamiliar library, security-sensitive code, complex business logic): review every line
+- **Established patterns** (another CRUD endpoint matching five existing ones): spot-check
+- **Pure boilerplate** (test scaffolding, import reordering, formatting): skim
 
 The calibration should shift over a project's lifetime: tight review early (while patterns are being established) → relaxed in the middle (patterns are proven) → tight again when entering new territory.
 
@@ -300,7 +300,7 @@ The one constant: **always review the diff, never just the agent's summary.** Th
 
 When you want the agent to follow a pattern, pointing at an existing example in the codebase is 10x more effective than describing the pattern in prose.
 
-"Follow the pattern in `src/api/users.ts`" beats a paragraph explaining the API pattern. The agent will read the file, internalize the structure, and replicate it. This works because agents are excellent pattern matchers — showing them a concrete example is playing to their strength.
+"Follow the pattern in `src/api/users.ts`" beats a paragraph explaining the API pattern. The agent will read the file, internalize the structure, and replicate it. This works because agents are excellent pattern matchers; showing them a concrete example is playing to their strength.
 
 ### Stop before anything irreversible or outward-facing
 
@@ -312,7 +312,7 @@ Encode the boundary in the operating manual as a short list of action types that
 
 ### Don't accumulate decisions in conversation
 
-If something important is decided — an architectural approach, a naming convention, a scope boundary — put it in a file. Conversation context gets compressed, summarized, or lost across sessions. Files are permanent.
+If something important is decided (an architectural approach, a naming convention, a scope boundary), put it in a file. Conversation context gets compressed, summarized, or lost across sessions. Files are permanent.
 
 The agent can always re-read a file. It can't always recall a decision from 50 messages ago, especially across session boundaries. If a decision matters tomorrow, write it down today.
 
@@ -342,13 +342,13 @@ Anthropic's harness research found a critical pattern: **agents reliably praise 
 
 Practical applications:
 
-- **Code review**: the agent that wrote the code should not be the sole reviewer. Use a separate review pass — whether that's a different agent, a code review bot, or your own eyes on the diff.
+- **Code review**: the agent that wrote the code should not be the sole reviewer. Use a separate review pass, whether that's a different agent, a code review bot, or your own eyes on the diff.
 - **Test evaluation**: if the agent wrote both the code and the tests, verify the tests actually test something meaningful. Tests written to make the suite pass are paperwork.
 - **Completion assessment**: don't ask the agent "are you done?" It will say yes. Define done as observable criteria (tests pass, feature works in the browser, deployment succeeds) and check those criteria yourself.
 
 ### Live verification is the definition of done
 
-Type checking and test suites verify code correctness. They do not verify feature correctness. A feature is done when you've seen it work — in a browser, in a terminal, against real data.
+Type checking and test suites verify code correctness. They do not verify feature correctness. A feature is done when you've seen it work: in a browser, in a terminal, against real data.
 
 This is the gap where the most bugs hide: code that passes all tests but doesn't actually do what the user needs. The agent can't close this gap for you. You have to use the thing.
 
@@ -410,7 +410,7 @@ If the proof is weaker than the prose, weaken the prose. Honest "not yet" sectio
 
 Anthropic's harness research names this directly: "The core challenge of long-running agents is that they must work in discrete sessions, and each new session begins with no memory of what came before."
 
-Every session start is a cold start. The agent doesn't remember what you discussed yesterday, what approach you agreed on, or what's half-finished. Without a bridging mechanism, you waste the first 10 minutes of every session re-establishing context — or worse, the agent proceeds from stale assumptions.
+Every session start is a cold start. The agent doesn't remember what you discussed yesterday, what approach you agreed on, or what's half-finished. Without a bridging mechanism, you waste the first 10 minutes of every session re-establishing context. Worse, the agent proceeds from stale assumptions.
 
 ### Structured artifacts bridge sessions
 
@@ -444,11 +444,11 @@ A strong handoff is a green commit that carries its own truth: code, tests, stat
 
 For multi-session projects, write reference documentation in the repo before building. Context windows compress and sessions end. A spec that exists only in conversation will be lost or distorted.
 
-Chunked docs in the repo enable progressive disclosure — load only what's needed for the current task, not the entire project history. This matters more as projects grow: a 20-file project can fit in context, a 200-file project cannot.
+Chunked docs in the repo enable progressive disclosure: load only what's needed for the current task, not the entire project history. This matters more as projects grow: a 20-file project can fit in context, a 200-file project cannot.
 
 ### Re-orient before acting
 
-Every session should start with orientation: read the current state, check what's changed, verify the baseline still works. Anthropic's harness architecture makes this explicit — every session follows: **Orient** (read progress, task list, recent git history) → **Verify baseline** (test that existing functionality still works) → **Build** (implement the next thing).
+Every session should start with orientation: read the current state, check what's changed, verify the baseline still works. Anthropic's harness architecture makes this explicit. Every session follows: **Orient** (read progress, task list, recent git history) → **Verify baseline** (test that existing functionality still works) → **Build** (implement the next thing).
 
 Skipping orientation is how you get an agent that "fixes" something that was already working, or builds on top of a broken foundation from the previous session.
 
@@ -460,33 +460,33 @@ The failure this prevents is quiet and expensive: an architect session improves 
 
 ### Keep one rolling plan, and automate the trigger
 
-A state file records where you are. It does not, by itself, keep you on course toward where you are going. On long builds the forward plan tends to scatter across half-current documents or live only in the builder's head, and re-planning happens only when someone remembers to do it -- which, across enough sessions, they don't. The result is drift: each session re-derives the goal from partial memory and slowly wanders.
+A state file records where you are. It does not, by itself, keep you on course toward where you are going. On long builds the forward plan tends to scatter across half-current documents or live only in the builder's head, and re-planning happens only when someone remembers to do it (which, across enough sessions, they don't). The result is drift: each session re-derives the goal from partial memory and slowly wanders.
 
 Two practices fix this:
 
-- **One current plan, rolling-wave.** Keep exactly one plan that runs from now to done. Detail the next step, sketch the rest, and regenerate it at each checkpoint as the near becomes now. This is standard rolling-wave planning -- the far end is allowed to be coarse. Keep one in flight: when a plan is superseded, move the old copy to a "previous" archive instead of deleting it. Previous, not stale -- history is fuel for progressive disclosure, but only one plan is ever current. The discipline that prevents drift is having exactly one document that answers "where are we going," not many that half-do.
+- **One current plan, rolling-wave.** Keep exactly one plan that runs from now to done. Detail the next step, sketch the rest, and regenerate it at each checkpoint as the near becomes now. This is standard rolling-wave planning: the far end is allowed to be coarse. Keep one in flight: when a plan is superseded, move the old copy to a "previous" archive instead of deleting it. Previous, not stale: history is fuel for progressive disclosure, but only one plan is ever current. The discipline that prevents drift is having exactly one document that answers "where are we going," not many that half-do.
 
-- **Automate the trigger; do not rely on discipline.** Orienting and updating state happen reliably only when something other than memory triggers them. Surface the current plan automatically at session start -- for example, a session-start hook that prints it -- so the agent reads it instead of re-deriving. And attach the replan to an event that already happens: the green commit or merge that closes a slice. Bolting "regenerate the plan" onto an existing habit (habit-stacking) is what makes it recur, where a free-floating reminder decays.
+- **Automate the trigger; do not rely on discipline.** Orienting and updating state happen reliably only when something other than memory triggers them. Surface the current plan automatically at session start (for example, a session-start hook that prints it) so the agent reads it instead of re-deriving. And attach the replan to an event that already happens: the green commit or merge that closes a slice. Bolting "regenerate the plan" onto an existing habit (habit-stacking) is what makes it recur, where a free-floating reminder decays.
 
-The method here -- rolling-wave planning, limiting work-in-progress to one plan, habit-stacking the replan onto the commit -- is established practice. The failure mode is treating staying-on-track as something you remember to do, rather than something the environment makes happen.
+The method here (rolling-wave planning, limiting work-in-progress to one plan, habit-stacking the replan onto the commit) is established practice. The failure mode is treating staying-on-track as something you remember to do, rather than something the environment makes happen.
 
 ---
 
 ## 9. Working with Multiple Agents
 
-As projects grow, you'll use multiple agents — a builder, a reviewer, parallel investigators, specialized subagents. These patterns, drawn from multi-agent production work and Anthropic's harness research, help you coordinate them.
+As projects grow, you'll use multiple agents: a builder, a reviewer, parallel investigators, specialized subagents. These patterns, drawn from multi-agent production work and Anthropic's harness research, help you coordinate them.
 
 ### Builder/reviewer separation
 
-The agent that wrote the code should not be the sole evaluator of the code. This is Anthropic's most consistent finding: agents reliably praise their own work. The fix is structural, not prompting — use a separate context, separate prompt, and separate evaluation criteria for review.
+The agent that wrote the code should not be the sole evaluator of the code. This is Anthropic's most consistent finding: agents reliably praise their own work. The fix is structural: use a separate context, separate prompt, and separate evaluation criteria for review.
 
 The cycle: **build** (agent implements a slice) → **self-test** (agent runs tests) → **review** (different agent or human reviews the diff against the spec) → **human stop** (you decide whether to continue).
 
 ### Two-stage review, and match the model to the task
 
-When a separate agent reviews, split the review into two passes, in order: **spec-compliance first** (did it build what was asked — nothing missing, nothing extra?), then **code-quality** (is what it built well-made?). Running quality review before spec-compliance wastes effort polishing the wrong thing. Each finding goes back to the *same* implementer to fix, then the reviewer re-checks — don't move on with an open finding, and don't let the implementer's self-review stand in for the separate review.
+When a separate agent reviews, split the review into two passes, in order: **spec-compliance first** (did it build what was asked: nothing missing, nothing extra?), then **code-quality** (is what it built well-made?). Running quality review before spec-compliance wastes effort polishing the wrong thing. Each finding goes back to the *same* implementer to fix, then the reviewer re-checks. Don't move on with an open finding, and don't let the implementer's self-review stand in for the separate review.
 
-Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical — spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
+Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical; spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
 
 ### Verify the builder's report against the repository
 
@@ -524,21 +524,21 @@ Bad: "Review all the changes and make sure everything looks good."
 
 Without explicit stops between slices, agents chain work indefinitely. Each chained step inherits and amplifies any drift from the plan. Build natural stopping points where you evaluate direction, not just correctness.
 
-The stop isn't "does the code work?" — it's "is this still building toward what I want?"
+The stop isn't "does the code work?" It's "is this still building toward what I want?"
 
 ### AI can veto but cannot approve
 
-Agents can reject work that fails invariants — a test suite, a linter, a security check. But final approval to merge and ship requires human judgment. This is the authority boundary: agents enforce constraints, humans make acceptance decisions.
+Agents can reject work that fails invariants (a test suite, a linter, a security check). But final approval to merge and ship requires human judgment. This is the authority boundary: agents enforce constraints, humans make acceptance decisions.
 
 ### Drafts vs. canonical artifacts
 
-When agents produce work products (not just code — reports, analyses, decisions), treat them as drafts until a human or policy engine promotes them. The boundary should be structural, not just social: agent output is labeled as draft, and promotion to canonical status is a separate, auditable step.
+When agents produce work products (not just code: reports, analyses, decisions), treat them as drafts until a human or policy engine promotes them. The boundary should be structural, not just social: agent output is labeled as draft, and promotion to canonical status is a separate, auditable step.
 
 Without this boundary, AI can effectively self-certify its own work. The draft/canonical split makes human review a part of the system, not just a good intention.
 
 ### Parallel investigation, not parallel implementation
 
-Multiple agents investigating different hypotheses simultaneously (debugging, research, code archaeology) is a superpower. Multiple agents implementing code in parallel usually causes problems — merge conflicts, inconsistent patterns, duplicate work.
+Multiple agents investigating different hypotheses simultaneously (debugging, research, code archaeology) is a superpower. Multiple agents implementing code in parallel usually causes problems: merge conflicts, inconsistent patterns, duplicate work.
 
 Use parallelism for divergent work (investigation). Use sequential work for convergent work (implementation).
 
@@ -590,7 +590,7 @@ When something breaks, the instinct is to tell the agent "fix this error." The a
 
 Reading the agent's summary of what it did and saying "looks good." The summary describes intent. The code describes reality. Always read the diff.
 
-This gets harder as you trust the agent more — which is when it matters most. The agent is most likely to introduce subtle bugs in areas you've stopped closely reviewing because "it always gets this right."
+This gets harder as you trust the agent more, which is when it matters most. The agent is most likely to introduce subtle bugs in areas you've stopped closely reviewing because "it always gets this right."
 
 ### One-shotting complex work
 
@@ -604,15 +604,15 @@ Asking the agent to build an entire feature, page, or system in one request. Ant
 
 ### Suggesting easier alternatives when things get hard
 
-When the agent hits infrastructure friction — a test that's hard to write, a configuration that's complex, a dependency that's difficult — it may suggest skipping it or doing something simpler. Often the hard thing is the right thing. Push through.
+When the agent hits infrastructure friction (a test that's hard to write, a configuration that's complex, a dependency that's difficult), it may suggest skipping it or doing something simpler. Often the hard thing is the right thing. Push through.
 
 ### Silent scope reduction
 
-Cutting features, removing edge cases, or simplifying requirements without explicitly acknowledging the reduction. Deferral is fine — silence about it is not. If scope changes, say what changed and why. This applies to both you and the agent.
+Cutting features, removing edge cases, or simplifying requirements without explicitly acknowledging the reduction. Deferral is fine. Silence about it is not. If scope changes, say what changed and why. This applies to both you and the agent.
 
 ### Recommending on effort, not merit
 
-Related to silent scope reduction, but about the *justification*: the agent (or you) steers toward the smaller or faster option and dresses it as discipline — "let's just get it green," "this is less code," "the more finishable version." Effort and size are real considerations, but they are not *merits*. A recommendation should stand on correctness, the product's actual bar, and genuine risk — not on being easier. When the words "land it green," "least code," or "more finishable" are carrying the argument, that's the smell: re-justify on merit, and if you are deferring scope, defer it openly.
+Related to silent scope reduction, but about the *justification*: the agent (or you) steers toward the smaller or faster option and dresses it as discipline: "let's just get it green," "this is less code," "the more finishable version." Effort and size are real considerations, but they are not *merits*. A recommendation should stand on correctness, the product's actual bar, and genuine risk (not on being easier). When the words "land it green," "least code," or "more finishable" are carrying the argument, that's the smell: re-justify on merit, and if you are deferring scope, defer it openly.
 
 ### Over-engineering for hypothetical futures
 
@@ -620,7 +620,7 @@ Building abstractions, helpers, or frameworks for requirements that don't exist 
 
 ### Using the agent as a search engine
 
-Don't ask "what does this function do?" when you can read it yourself in 30 seconds. Use the agent for synthesis (processing many files), implementation (generating code), investigation (tracing through a codebase), and transformation (refactoring) — things where the agent's ability to process in parallel provides real leverage. Simple lookups are faster with your own eyes.
+Don't ask "what does this function do?" when you can read it yourself in 30 seconds. Use the agent for synthesis (processing many files), implementation (generating code), investigation (tracing through a codebase), and transformation (refactoring). These are the tasks where the agent's ability to process in parallel provides real leverage. Simple lookups are faster with your own eyes.
 
 ### Not establishing patterns early
 
@@ -628,7 +628,7 @@ The first component, module, or API endpoint you build with the agent becomes th
 
 ### Ignoring the agent's pushback
 
-When the agent says "this approach has a problem," evaluate it on its merits. The agent isn't being difficult — it may have caught something you missed. Dismissing pushback because you want to move fast is how design mistakes get baked in.
+When the agent says "this approach has a problem," evaluate it on its merits. The agent may have caught something you missed. Dismissing pushback because you want to move fast is how design mistakes get baked in.
 
 The flip side: when the agent pushes back with generic caution ("are you sure you want to..."), that's not the same as specific technical pushback. Generic caution can be overridden. Specific warnings should be investigated.
 
@@ -653,39 +653,39 @@ Agents are good at making product language sound complete. That creates a subtle
 A one-page reference for the practices in this guide, ordered by when they matter.
 
 ### Before you start
-- [ ] Write your operating manual (CLAUDE.md / AGENTS.md) — concise, specific, context over rules
+- [ ] Write your operating manual (CLAUDE.md / AGENTS.md): concise, specific, context over rules
 - [ ] Encode security as specific constraints, not principles
 - [ ] Set up automated quality gates (tests, linter, type checker, formatter)
 - [ ] Establish git workflow (branch per feature, conventional commits)
 
 ### Before you decide what to build (a strategy or design pass)
-- [ ] Define the pass first — its question, the output that counts as done, what's out of scope
+- [ ] Define the pass first: its question, the output that counts as done, what's out of scope
 - [ ] Agent sharpens and stress-tests the thesis; it doesn't just agree
 - [ ] Verify competitor / strategy claims against primary sources before building on them
 - [ ] When you keep colliding on *how* to build, stop and sync the operating model explicitly
 
 ### Before each feature
-- [ ] Write a work packet — goal, behavior, files, out of scope, checks, stop point, rollback
+- [ ] Write a work packet: goal, behavior, files, out of scope, checks, stop point, rollback
 - [ ] Design verification alongside the feature, not after
 - [ ] Plan when choices matter, just build when they don't
 - [ ] If multi-session: write reference docs in the repo, not in conversation
 
 ### During the build
-- [ ] Small, verifiable steps — verify each before moving on
+- [ ] Small, verifiable steps: verify each before moving on
 - [ ] TDD: write the test, verify it captures intent, let the agent implement
-- [ ] Commit after each working step — commits are save points
+- [ ] Commit after each working step: commits are save points
 - [ ] Give full errors, not summaries
 - [ ] Show examples, don't describe patterns
 - [ ] Put decisions in files, not conversation
 - [ ] Treat untrusted external text as evidence, never instruction
-- [ ] Build complete — no placeholder anything
+- [ ] Build complete: no placeholder anything
 - [ ] Commit bodies say what changed and why, never the build narrative
 - [ ] Flag and stop before anything irreversible or outward-facing
 
 ### After each step
 - [ ] Review the diff, not the summary
-- [ ] Run the feature yourself — type checks verify code, not features
-- [ ] Match proof to claim — tests, browser, live URL, repo state, or proof matrix as appropriate
+- [ ] Run the feature yourself: type checks verify code, not features
+- [ ] Match proof to claim: tests, browser, live URL, repo state, or proof matrix as appropriate
 - [ ] Separate who builds from who evaluates
 - [ ] Mutation-test the guards that matter: remove, confirm red, restore
 - [ ] Verify every fake against the real dependency before its tests count as proof
@@ -694,8 +694,8 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Never edit a plan another session is executing; extend it in a new file
 
 ### When using multiple agents
-- [ ] Separate who builds from who reviews — different context, different prompt
-- [ ] Narrow review scopes — name exact files and spec, not "review everything"
+- [ ] Separate who builds from who reviews: different context, different prompt
+- [ ] Narrow review scopes: name exact files and spec, not "review everything"
 - [ ] Build in human stop points between slices
 - [ ] AI enforces constraints; humans make acceptance decisions
 - [ ] Put important outcomes in durable artifacts, not broker or chat messages
@@ -714,7 +714,7 @@ A one-page reference for the practices in this guide, ordered by when they matte
 ### Every session start
 - [ ] Read the one current rolling plan (surface it automatically; don't re-derive it)
 - [ ] Orient: read progress, task list, recent git history
-- [ ] Establish the current authority order — repo, docs, and git before memory or stale output
+- [ ] Establish the current authority order: repo, docs, and git before memory or stale output
 - [ ] Verify baseline: confirm existing functionality still works
 - [ ] Then build
 
@@ -722,19 +722,19 @@ A one-page reference for the practices in this guide, ordered by when they matte
 
 ## Worked Example: One Slice, End to End
 
-*Anonymized from a real session — a deterministic developer-tooling product. It threads the practices together in sequence; the specifics are scrubbed.*
+*Anonymized from a real session (a deterministic developer-tooling product). It threads the practices together in sequence; the specifics are scrubbed.*
 
-**Deciding what to build (§3).** The session opened with a vague intent: "do it better than the incumbent." Undefined, that wanders. We **defined the pass first** — its question ("what makes us the obvious choice for this buyer, and what must we build to make it true?"), its output (a one-paragraph positioning lead plus a ranked list of product moves), and what was out of scope (pricing, go-to-market). Then we ran it: the human thought out loud toward a thesis; the agent's job was to **sharpen and stress-test it**, not agree — naming the strongest counter-argument, and conceding when the human's timing argument turned out to be the better one. A competitor claim the whole strategy leaned on was **verified against the incumbent's own materials before** we built on it (claims outrun proof in strategy too).
+**Deciding what to build (§3).** The session opened with a vague intent: "do it better than the incumbent." Undefined, that wanders. We **defined the pass first**: its question ("what makes us the obvious choice for this buyer, and what must we build to make it true?"), its output (a one-paragraph positioning lead plus a ranked list of product moves), and what was out of scope (pricing, go-to-market). Then we ran it: the human thought out loud toward a thesis; the agent's job was to **sharpen and stress-test it**, not agree (naming the strongest counter-argument, and conceding when the human's timing argument turned out to be the better one). A competitor claim the whole strategy leaned on was **verified against the incumbent's own materials before** we built on it (claims outrun proof in strategy too).
 
-**Spec before code (§4).** The chosen slice got a short design doc — what it does, which files, how to verify, what it explicitly does not do — reviewed and approved before any implementation.
+**Spec before code (§4).** The chosen slice got a short design doc (what it does, which files, how to verify, what it explicitly does not do), reviewed and approved before any implementation.
 
-**The build, via subagents (§5, §9).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents — spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
+**The build, via subagents (§5, §9).** The plan was broken into small, test-first tasks. Each ran as a fresh subagent: write the failing test, implement, run the gates, commit. After each, **two-stage review** by separate agents: spec-compliance first (did it build exactly what was asked?), then code-quality. Models were **matched to the task**: a cheap model for the mechanical, fully-specified modules; a stronger one for integration; the most capable for the final whole-change review.
 
-**What the separation caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see** — a value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Builder/reviewer separation (§9) earning its cost in one stroke.
+**What the separation caught.** The keystone moment: every per-task review passed, but the **final whole-change review caught a silent failure the per-task reviews structurally could not see**. A value that should have degraded to "unknown" was instead being reported as "all clear" in one cross-cutting configuration. A false all-clear was exactly the failure the product exists to prevent. It was caught *before merge*, fixed, and re-verified. Builder/reviewer separation (§9) earning its cost in one stroke.
 
-**The operating-model sync (§3).** Midway, the human and agent kept colliding — the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." Written down, the friction stopped.
+**The operating-model sync (§3).** Midway, the human and agent kept colliding: the agent repeatedly recommending the smaller, faster option; the human repeatedly correcting it. Instead of re-litigating each instance, we **stopped and named the rule**: build to the bar; sequencing work for later is fine, but cutting scope to save effort is not; recommend on merit, never on "let's just get it green." Written down, the friction stopped.
 
-**Finishing (§7, §8).** Done meant green — full suite, linters, types — verified by the human's own eyes on the diff, not the agent's summary. State files and the one rolling plan were updated in the same arc, and the work merged on green.
+**Finishing (§7, §8).** Done meant green (full suite, linters, types), verified by the human's own eyes on the diff, not the agent's summary. State files and the one rolling plan were updated in the same arc, and the work merged on green.
 
 The whole session is just the manual's practices in sequence. None of it was improvised; all of it was the method.
 
@@ -806,22 +806,22 @@ Sources for this section: the usabl build logs, quality bars, and role definitio
 ## Sources
 
 ### Research
-- [Anthropic — Agentic coding and persistent returns to expertise](https://www.anthropic.com/research/claude-code-expertise) — ~400K sessions, domain expertise as primary success predictor
-- [Anthropic — Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents) — session continuity, two-agent harness, progress files
-- [Anthropic — How AI is transforming work at Anthropic](https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic) — internal study, 200K transcripts, supervision paradox
-- [Anthropic — 2026 Agentic Coding Trends Report](https://resources.anthropic.com/2026-agentic-coding-trends-report) — industry trends, security at scale
-- [CodeScene — Agentic AI Coding: Best Practice Patterns](https://codescene.com/blog/agentic-ai-coding-best-practice-patterns-for-speed-with-quality) — peer-reviewed code health research, 39 codebases, 60% defect increase in unhealthy code
+- [Anthropic: Agentic coding and persistent returns to expertise](https://www.anthropic.com/research/claude-code-expertise): ~400K sessions, domain expertise as primary success predictor
+- [Anthropic: Effective harnesses for long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents): session continuity, two-agent harness, progress files
+- [Anthropic: How AI is transforming work at Anthropic](https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic): internal study, 200K transcripts, supervision paradox
+- [Anthropic: 2026 Agentic Coding Trends Report](https://resources.anthropic.com/2026-agentic-coding-trends-report): industry trends, security at scale
+- [CodeScene: Agentic AI Coding: Best Practice Patterns](https://codescene.com/blog/agentic-ai-coding-best-practice-patterns-for-speed-with-quality): peer-reviewed code health research, 39 codebases, 60% defect increase in unhealthy code
 
 ### Practitioner Guides
-- [Simon Willison — Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/) — TDD with agents, lethal trifecta, domain knowledge hoarding
-- [Addy Osmani — My LLM coding workflow going into 2026](https://addyosmani.com/blog/ai-coding-workflow/) — iterative chunks, review discipline, automated gates
-- [Nx Blog — A Practical Guide on Effective AI Use](https://nx.dev/blog/practical-guide-effective-ai-coding) — AI as peer programmer
-- [Edward Donner — AI Coder: Vibe Coder to Agentic Engineer](https://edwarddonner.com/2026/02/17/ai-coder-vibe-coder-to-agentic-engineer/) — progression framework, multi-agent patterns
+- [Simon Willison: Agentic Engineering Patterns](https://simonwillison.net/2026/Feb/23/agentic-engineering-patterns/): TDD with agents, lethal trifecta, domain knowledge hoarding
+- [Addy Osmani: My LLM coding workflow going into 2026](https://addyosmani.com/blog/ai-coding-workflow/): iterative chunks, review discipline, automated gates
+- [Nx Blog: A Practical Guide on Effective AI Use](https://nx.dev/blog/practical-guide-effective-ai-coding): AI as peer programmer
+- [Edward Donner: AI Coder: Vibe Coder to Agentic Engineer](https://edwarddonner.com/2026/02/17/ai-coder-vibe-coder-to-agentic-engineer/): progression framework, multi-agent patterns
 
 ### Community Resources
-- [BuildBetter — AGENTS.md Complete Guide for Engineering Teams](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/) — operating manual as universal standard
-- [Wes McKinney (MotherDuck) — Vibe Coding Is Dangerous, Agentic Engineering Isn't](https://motherduck.com/blog/vibe-coding-dangerous-agentic-engineering-wes-mckinney/) — scope, design, taste, conceptual integrity
-- [Andrej Karpathy](https://x.com/karpathy) — original "vibe coding" and "agentic engineering" distinctions
+- [BuildBetter: AGENTS.md Complete Guide for Engineering Teams](https://blog.buildbetter.ai/agents-md-complete-guide-for-engineering-teams-in-2026/): operating manual as universal standard
+- [Wes McKinney (MotherDuck): Vibe Coding Is Dangerous, Agentic Engineering Isn't](https://motherduck.com/blog/vibe-coding-dangerous-agentic-engineering-wes-mckinney/): scope, design, taste, conceptual integrity
+- [Andrej Karpathy](https://x.com/karpathy): original "vibe coding" and "agentic engineering" distinctions
 
 ---
 

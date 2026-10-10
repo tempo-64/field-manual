@@ -1,12 +1,12 @@
 # The Solo Builder's Field Manual
 
-Practical engineering with AI coding agents — grounded in evidence, not vibes.
+Practical engineering with AI coding agents, grounded in evidence.
 
 ## What's Here
 
-- **[FIELD-MANUAL.md](FIELD-MANUAL.md)** — The guide. Universal practices for building software with AI coding agents, drawn from research, practitioner experience, observed patterns across thousands of projects, and dated incidents from real builds. Ends with a worked example and a case study of one product built two different ways under the same quality bar.
-- **[STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md)** — A ready-to-use CLAUDE.md / AGENTS.md template to drop into new projects, with adaptation guides for different project types.
-- **[AGENTS.md](AGENTS.md)** — The repo-local operating contract for maintaining this manual itself.
+- **[FIELD-MANUAL.md](FIELD-MANUAL.md)**: The guide. Universal practices for building software with AI coding agents, drawn from research, practitioner experience, observed patterns across thousands of projects, and dated incidents from real builds. Ends with a worked example and a case study of one product built two different ways under the same quality bar.
+- **[STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md)**: A ready-to-use CLAUDE.md / AGENTS.md template to drop into new projects, with adaptation guides for different project types.
+- **[AGENTS.md](AGENTS.md)**: The repo-local operating contract for maintaining this manual itself.
 
 ## Who This Is For
 
@@ -20,4 +20,4 @@ Key sources include Anthropic's engineering research (~400K sessions), CodeScene
 
 ## License
 
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — share it, adapt it, use it. Attribution appreciated.
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): share it, adapt it, use it. Attribution appreciated.
