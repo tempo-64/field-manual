@@ -6,7 +6,7 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 
 ## Files
 
-- `FIELD-MANUAL.md` - the main guide and source list.
+- `FIELD-MANUAL.md` - the main guide, worked example, case study, and source list.
 - `STARTER-CLAUDE-MD.md` - copy-paste starter template for `CLAUDE.md` / `AGENTS.md`.
 - `README.md` - short repo overview.
 - `LICENSE` - CC BY 4.0 license text.
@@ -38,7 +38,8 @@ When adding sources, prefer primary sources, practitioner posts with concrete wo
 - Markdown only; keep formatting simple.
 - Use short headings and tight paragraphs.
 - Keep examples small and copy-pasteable.
-- Use ASCII punctuation for new text unless editing nearby text that already uses a different style.
+- ASCII punctuation only. No em dashes and no doubled hyphens as punctuation anywhere in the repo; use a period, comma, colon, semicolon, or parentheses.
+- Plain, direct sentences. Avoid the "not X, but Y" construction as a stylistic tic; state what is true.
 - Do not add broad rewrites unless explicitly requested.
 - Do not duplicate advice across sections; cross-reference or sharpen the existing section instead.
 - If adding to "The Practices at a Glance," make sure the matching full section exists.

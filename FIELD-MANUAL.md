@@ -19,10 +19,11 @@ Every practice in this guide meets at least one of these bars:
 - **Independently converged** — multiple practitioners discovered it separately (strongest signal)
 - **Empirically researched** — backed by studies with data, not just anecdotes
 - **Observed pattern** — consistent across many projects but not yet formally studied
+- **Dated incident** — a specific failure on a real project, recorded with the date and the rule that came out of it. Several practices in sections 5 through 11 carry their incident in the text.
 
 Opinions are labeled as opinions. Preferences are left out. When evidence is thin, that's noted.
 
-Key sources: Anthropic's engineering research and agentic coding studies (~400K sessions analyzed), CodeScene's peer-reviewed code health research (39 production codebases), Simon Willison's Agentic Engineering Patterns guide, Addy Osmani's practitioner workflow documentation, and field experience across production projects. Full references at the end.
+Key sources: Anthropic's engineering research and agentic coding studies (~400K sessions analyzed), CodeScene's peer-reviewed code health research (39 production codebases), Simon Willison's Agentic Engineering Patterns guide, Addy Osmani's practitioner workflow documentation, and the author's own production projects, including one whose full build record is public and summarized in the case study near the end. Full references at the end.
 
 ---
 
@@ -160,6 +161,10 @@ Founders and architects think out loud toward conviction — half-formed, circli
 
 "Match proof to the claim" (§7) is not only for code. A positioning claim, a competitor characterization, a "we're better at X" — each can outrun its evidence. Verify competitor claims against primary sources before building strategy on them. Mark "we're better" as demonstrable-now, or flag it as a hypothesis. A guarantee you cannot yet prove becomes a stated **design bar** until the proof exists, not a promise. A wrong strategy claim costs more than a wrong line of code, because you build on it.
 
+### Design decisions need a visible artifact
+
+Most people cannot ratify a design from prose, and the owner of the product is usually one of them. A design review that is a wall of text produces either silence or a shrug, and both read as approval. Treat written design calls as provisional, and sequence the work so something the owner can see, click, or run arrives early. Then iterate on the artifact. The written plan records the call; the artifact is what gets the call made.
+
 ### Sync the operating model when it drifts
 
 The sharpest friction is rarely a single decision — it is an unspoken mismatch about *how you build*: what "good" means, how much scope is right, how fast to move. When the agent keeps recommending one way and you keep correcting it, stop and **re-sync the operating model explicitly** instead of re-litigating each instance. Name the principle, write it down, and proceed from the shared rule. One alignment conversation prevents twenty corrections.
@@ -257,6 +262,7 @@ Commits aren't ceremony. They're save points.
 - **Commit after each working step** — before asking the agent to make the next change
 - **Meaningful messages** — "feat: add user authentication with JWT" tells you what to revert to. "WIP" tells you nothing.
 - **One logical change per commit** — a commit that mixes a feature, a refactor, and a bug fix is three commits that can't be independently reverted
+- **The body says what the change does and why**, in two or three sentences. It is not the place for the defect hunt, the review findings, or the build narrative. A reader six months from now needs the decision, not the story.
 
 ---
 
@@ -296,6 +302,14 @@ When you want the agent to follow a pattern, pointing at an existing example in 
 
 "Follow the pattern in `src/api/users.ts`" beats a paragraph explaining the API pattern. The agent will read the file, internalize the structure, and replicate it. This works because agents are excellent pattern matchers — showing them a concrete example is playing to their strength.
 
+### Stop before anything irreversible or outward-facing
+
+Most agent work is reversible: a bad edit is a `git checkout` away. Some is not. Publishing, deleting data, force-pushing shared branches, signing, writing to a public log, sending to an external service, spending money. For those, the rule is flag the risk, stop, and get the human's call before acting, even when the action follows from the task.
+
+A concrete case: a keyless signing setup would, by default, have written private organization and repository names into a public transparency log. The agent flagged it before running it. The pause surfaced a staging option that the default path never mentioned. The risk was not in the code. It was in a default the agent could see and the human had not thought about.
+
+Encode the boundary in the operating manual as a short list of action types that always stop. Generic caution on everything trains the human to say "yes" without reading. A short list of real stops keeps each one meaningful.
+
 ### Don't accumulate decisions in conversation
 
 If something important is decided — an architectural approach, a naming convention, a scope boundary — put it in a file. Conversation context gets compressed, summarized, or lost across sessions. Files are permanent.
@@ -305,6 +319,14 @@ The agent can always re-read a file. It can't always recall a decision from 50 m
 ---
 
 ## 7. Quality and Verification
+
+### Absence of evidence never renders as success
+
+This is the one sentence the rest of this section depends on. An agent asked whether its work is done will say yes. A tool whose detector did not run will report zero findings. A check that was skipped produces the same silence as a check that passed. In every case the honest state is "unknown", and unknown must never display as green.
+
+Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the code), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it.
+
+This applies to your own tooling too. One builder's efficiency monitor reported zero interventions for weeks. The detectors were not quiet; a settings file had disabled the plugin and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
 
 ### Automated gates are force multipliers
 
@@ -329,6 +351,18 @@ Practical applications:
 Type checking and test suites verify code correctness. They do not verify feature correctness. A feature is done when you've seen it work — in a browser, in a terminal, against real data.
 
 This is the gap where the most bugs hide: code that passes all tests but doesn't actually do what the user needs. The agent can't close this gap for you. You have to use the thing.
+
+### Mutation-test the tests
+
+A test that passes proves little until you know it can fail. For every guard, check, or honesty invariant that matters, remove or invert it and confirm that exactly its own tests go red and nothing else does. Then restore it. The transcript of that red-then-green is stronger evidence than the green alone, and it belongs in the PR.
+
+This matters more with agents than without. Agents write tests that pass. Some of those tests assert the implementation back at itself, or stub the very path they claim to cover. A mutation check separates tests that are load-bearing from tests that are paperwork, and it takes a minute per guard.
+
+### Check your fakes against the real dependency
+
+A test double encodes a belief about how the real thing behaves. If the belief is wrong, every test built on the double is wrong in the same direction, and so is every reviewer who trusts those tests.
+
+One team shipped a readiness fix whose tests modelled a browser event as blocking until the network settled. In the real browser the event resolves in a few milliseconds. The builder, the reviewer, and the shared fake all agreed the fix worked, and it did nothing. A reviewer required to run the real browser caught it. Before a fake counts as proof, verify its behavior against the real dependency's documentation or a live probe, and record which one you used.
 
 ### Coverage honesty
 
@@ -418,6 +452,12 @@ Every session should start with orientation: read the current state, check what'
 
 Skipping orientation is how you get an agent that "fixes" something that was already working, or builds on top of a broken foundation from the previous session.
 
+### A plan in execution is frozen
+
+When one session is executing a plan, no other session edits that plan. New scope, new findings, or a better idea go in a new file that names the plan it extends and why. The executing session reads the new file at its next checkpoint.
+
+The failure this prevents is quiet and expensive: an architect session improves a plan while a builder is halfway through the old version, and the builder's next step no longer matches the document it was briefed from. "I am working on that plan" is a freeze signal. Treat it as one.
+
 ### Keep one rolling plan, and automate the trigger
 
 A state file records where you are. It does not, by itself, keep you on course toward where you are going. On long builds the forward plan tends to scatter across half-current documents or live only in the builder's head, and re-planning happens only when someone remembers to do it -- which, across enough sessions, they don't. The result is drift: each session re-derives the goal from partial memory and slowly wanders.
@@ -447,6 +487,30 @@ The cycle: **build** (agent implements a slice) → **self-test** (agent runs te
 When a separate agent reviews, split the review into two passes, in order: **spec-compliance first** (did it build what was asked — nothing missing, nothing extra?), then **code-quality** (is what it built well-made?). Running quality review before spec-compliance wastes effort polishing the wrong thing. Each finding goes back to the *same* implementer to fix, then the reviewer re-checks — don't move on with an open finding, and don't let the implementer's self-review stand in for the separate review.
 
 Match the model to the task to control cost without losing rigor: a cheap, fast model for mechanical, fully-specified work (one file, complete spec); a standard model for integration and judgment (multiple files, pattern-matching, debugging); the most capable model for design and review. Most well-specified implementation is mechanical — spend the capable model where a second set of eyes pays off, on the review and the architecture, not the transcription.
+
+### Verify the builder's report against the repository
+
+A builder's report is a claim. "Committed as `2af13b7`, tree clean, 19 ahead" is exactly as true as the repository says it is, and no truer. On one project that report was false: the hash did not exist, the work was uncommitted, and the gates and an external review had already started against a HEAD that did not contain it.
+
+After every builder hand-back, and before any gate, review, or push, read the repository yourself: `git log`, `git status`, and `git reflog` when a hash looks wrong. It takes seconds. Trusting the report instead costs a review cycle at best and a merge of nothing at worst.
+
+### Two-phase briefs: audit and failing test first
+
+For any packet where the premise might be wrong, split the brief. Phase one: audit the current behavior, write the failing test that captures the intended change, and stop. The architect reads the audit and the red test, and ratifies or corrects the premise. Phase two: implement until green.
+
+The stop is the point. Two of the first several two-phase briefs on one project revealed a wrong premise before a line of implementation existed. A single-phase brief would have built the wrong thing correctly, and the review would have had to catch it in a diff instead of a paragraph.
+
+### Fresh context per batch, bounded review cadence
+
+Long-lived builder sessions degrade. Context fills with history, instructions thin, and the agent's reports drift from the repository. One builder kept alive across four fix rounds reached roughly 425,000 tokens of history and misreported its commits twice, while the reviewer spent roughly 563,000 tokens re-reviewing each round.
+
+The cadence that came out of it: a fresh builder with a cold brief for each sub-batch of work; one independent review per sub-batch; fix rounds get the architect's review and the automated gates, not another full external review. Cap concurrent builders at what you can actually review as the work comes back. On an eight-core machine that was two.
+
+### Design agent roles from real professions
+
+When you need a roster of agent roles for a domain, research how humans in that domain actually organize before inventing one. A made-up roster feels plausible and is usually wrong in ways that cost later: authority flows the wrong direction, two roles overlap, a real role is missing.
+
+One project needed a creative review structure. The first roster was invented and read well. Research found that the pairing it proposed had existed in advertising since 1949 under different names, and that the review panel it proposed copied a well-known studio practice with the authority reversed. The researched version worked. Name the sources in the role document so the next person can check them.
 
 ### Narrow review scopes
 
@@ -488,7 +552,31 @@ If a stale message and the repo disagree, trust the repo and correct the durable
 
 ---
 
-## 10. Anti-Patterns
+## 10. Cost
+
+### Measure total cost to an accepted outcome
+
+The only cost that matters is the total cost to a verified and accepted result. Tokens saved while review, rework, or defects go up are not a saving. A cheap build that needs three review rounds costs more than an expensive build that passes once.
+
+Apply the measure to every efficiency decision. Does a shorter brief lower total cost, or does it move the cost into review? Does skipping the second reviewer save tokens, or does it ship the defect the second reviewer would have caught? If you cannot answer with evidence, you do not yet know whether the change is efficient.
+
+### Rules that came from numbers
+
+These came from measured incidents rather than principle, and they generalize:
+
+- **Fresh context per batch.** A long-lived builder is more expensive than a new one, because its history is loaded on every turn and its reports degrade (§9).
+- **No fan-out without a cost estimate.** Multi-agent review workflows cost a great deal and often find less than one careful reviewer with a narrow scope. Launch them when you can say what they will find that a single reviewer would not, and what they will cost.
+- **Load the minimum.** The architect loads the project guide, the one current plan, the current packet, and the files that packet touches. Everything else is loaded on demand. Progressive disclosure is cheaper than a full context on every turn.
+- **Spend capability where a second pair of eyes changes the outcome.** Mechanical, fully specified work goes to a cheaper model behind strong tests. The most capable model goes to design and review (§9).
+- **Cap concurrency at what you can review.** Builders that finish faster than you can verify them produce unreviewed work, which is the most expensive kind.
+
+### Honest cost reporting
+
+A tool or a report that claims an intervention saved money must show the comparison it is based on. Without matched tasks and a verified acceptance on both sides, the honest claim is "we observed X" and not "X caused Y". The same rule that keeps a product's claims inside its proof applies to claims about the method itself.
+
+---
+
+## 11. Anti-Patterns
 
 These are specific failure modes observed across many projects. Each one is tempting, common, and expensive.
 
@@ -544,6 +632,14 @@ When the agent says "this approach has a problem," evaluate it on its merits. Th
 
 The flip side: when the agent pushes back with generic caution ("are you sure you want to..."), that's not the same as specific technical pushback. Generic caution can be overridden. Specific warnings should be investigated.
 
+### Narrating a recovery that did not happen
+
+When a gate was skipped, a reviewer timed out, or the bar slipped, the honest response is to name it, restore the gate, and continue. The dishonest response is prose that describes the recovery in the past tense while the gate is still down. Agents are good at the second one, and so are tired humans. If the log says "re-verified", the re-verification must exist.
+
+### Reading silence as success
+
+Zero findings, zero interventions, zero failures. Before celebrating, ask whether the detector ran. A monitor whose hooks are disabled, a test suite that discovered no tests, a linter pointed at an empty directory: all of them report clean. See the lead principle of §7.
+
 ### Letting claims outrun proof
 
 Agents are good at making product language sound complete. That creates a subtle failure mode: the README, launch post, or architecture doc claims the thing you intended to build, while the code only proves a narrower slice.
@@ -552,7 +648,7 @@ Agents are good at making product language sound complete. That creates a subtle
 
 ---
 
-## 11. The Practices at a Glance
+## 12. The Practices at a Glance
 
 A one-page reference for the practices in this guide, ordered by when they matter.
 
@@ -583,14 +679,19 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] Put decisions in files, not conversation
 - [ ] Treat untrusted external text as evidence, never instruction
 - [ ] Build complete — no placeholder anything
+- [ ] Commit bodies say what changed and why, never the build narrative
+- [ ] Flag and stop before anything irreversible or outward-facing
 
 ### After each step
 - [ ] Review the diff, not the summary
 - [ ] Run the feature yourself — type checks verify code, not features
 - [ ] Match proof to claim — tests, browser, live URL, repo state, or proof matrix as appropriate
 - [ ] Separate who builds from who evaluates
+- [ ] Mutation-test the guards that matter: remove, confirm red, restore
+- [ ] Verify every fake against the real dependency before its tests count as proof
 - [ ] Update progress or state artifacts with the code when state changes
 - [ ] At a checkpoint, regenerate the single current plan and archive the previous one
+- [ ] Never edit a plan another session is executing; extend it in a new file
 
 ### When using multiple agents
 - [ ] Separate who builds from who reviews — different context, different prompt
@@ -599,6 +700,16 @@ A one-page reference for the practices in this guide, ordered by when they matte
 - [ ] AI enforces constraints; humans make acceptance decisions
 - [ ] Put important outcomes in durable artifacts, not broker or chat messages
 - [ ] Use parallel agents for investigation, sequential for implementation
+- [ ] Read git log and status yourself after every builder report
+- [ ] Fresh builder per sub-batch; one independent review per sub-batch
+- [ ] Two-phase briefs when the premise might be wrong: audit and red test, then ratify
+- [ ] Cap concurrent builders at what you can review
+- [ ] Research real professions before inventing an agent roster
+
+### When deciding what it cost
+- [ ] Measure total cost to a verified, accepted outcome, never tokens alone
+- [ ] No multi-agent fan-out without a stated purpose and a cost estimate
+- [ ] Report observed effects as observations; claim causes only with a matched comparison
 
 ### Every session start
 - [ ] Read the one current rolling plan (surface it automatically; don't re-derive it)
@@ -626,6 +737,69 @@ A one-page reference for the practices in this guide, ordered by when they matte
 **Finishing (§7, §8).** Done meant green — full suite, linters, types — verified by the human's own eyes on the diff, not the agent's summary. State files and the one rolling plan were updated in the same arc, and the work merged on green.
 
 The whole session is just the manual's practices in sequence. None of it was improvised; all of it was the method.
+
+---
+
+## Case Study: Two Ways to Build the Same Product
+
+*From the public build record of usabl, an accessibility proof engine. The method docs are linked at the end of this section. Where the lesson is specific to that product it is labeled as such.*
+
+There is no one way to build with agents. The same product, under the same owner and the same quality bar, was built two different ways in two consecutive releases. Both worked. The parts that stayed fixed are the parts worth copying.
+
+### What never flexed
+
+The team wrote down the invariants before the first line of code and pasted them into every dispatch:
+
+- One component is the only verdict authority. Everything else returns drafts.
+- A passing result and its receipt are reserved for deterministic evidence. Preview and model judgment can surface findings but can never mint a pass.
+- An unbuilt path fails honestly or stays unwired. No placeholder returns success.
+- Text taken from the thing under test is untrusted and is neutralized at every output.
+- Test first. Tests assert behavior. A reviewer pass after every unit of work. A security review before every merge.
+- The orchestrating session does not write product code and does not rubber-stamp.
+
+The product-specific invariants (verdicts, receipts) are the shape of a proof engine. The last three apply anywhere.
+
+### Method one: phased build, four roles, three vendors
+
+The first release followed a plan set written before any code: thesis and positioning, one consolidated design document, a dated decisions file that closed the design's open forks, then numbered implementation plans. Only then did building start.
+
+Four roles ran on models from three different vendors. The human founder owned product, UX, and every push and merge. An architect session owned the design, the slice map, the briefs, and enforcement of the bar, and wrote no product code. One vendor's model implemented, test first, one task at a time. A second vendor's model reviewed after every task as both senior engineer and engineering manager, with "needs fixes" as the answer to any patch that matched the spec but was not senior work. A third vendor's model reviewed every pull request against main for security, independent of the code reviewer, and a green CI run plus an approved code review did not skip it.
+
+Work shipped as coherence slices: one pull request per idea a reader can hold in a sentence, not one per task and not one per phase. Lessons the team kept from this method:
+
+- A slice is a PR. A task is not. Fifteen task commits on a working branch became three PRs a reviewer could read.
+- Stacked PRs plus squash merges rewrite branch history for every other clone. The second release did not stack.
+- A code comment that cites a plan section rots. A comment that states the invariant does not.
+- A merge gate that CI cannot enforce (a free-tier repository could not require the check) is recorded as a known gap and shown to the owner, never papered over.
+
+### Method two: builder-reviewer loop, one environment, one vendor
+
+The second release was a finish to team-pickup readiness, and it was built differently. Everything ran in one environment under one orchestrating session. For each slice, a builder agent built test first, a reviewer agent reviewed, and the loop repeated until the reviewer was satisfied. Then a separate security lane reviewed the slice, at slice granularity rather than per PR, so a four-slice feature that shipped as one PR got four security reviews. Pull requests on ordinary paths were pre-authorized and reviewed as they opened; changes to guarded paths and the release tag required explicit human approval.
+
+Independence came from separate dispatches and adversarial framing rather than from different vendors. The record shows that was enough to catch real defects:
+
+- On one slice, five review lanes ran at once. Three returned the same shape of finding: a confident wrong success, where recognition failed toward "already done" (a commented-out line read as wired, a substring match rewrote an operator's unrelated command, a 404 of any kind read as "no protection"). The fix in every case was to recognize only exact, anchored, positively confirmed forms and let everything else fall to refuse or cannot-verify.
+- Every honesty guard was mutation-tested: remove the guard, confirm exactly its own tests go red and nothing else. Reviewers re-derived the checks themselves rather than accept the claim.
+- A security lane recorded, for the record, that its first pass had accepted a byte-exact "already wired" check and missed a placeholder embedded in the draft it was checking. On re-derivation it ran crafted inputs and confirmed every one fell to not-wired.
+- The release-critical merge needed two-person control and the sole code owner was also the author. The tool refused. The situation was surfaced for a human decision, the branch ruleset was snapshotted, bypassed once, restored, and confirmed byte-identical, and the commit body records the override. The security model proving itself on the release path is a result, not a defect.
+- Clean-clone onboarding was run by a background agent from fresh clones and took 109 seconds. Four of eight commands exited non-zero, each an honest refusal. The result was labeled agent-run, not human-confirmed.
+
+### Keeping the bar as sessions get long
+
+Both methods shared one document whose only job was to stop quality from sliding as context filled. Its premise: subagents start empty, so a forgotten paste is the default failure, not a surprise. Every builder and reviewer dispatch had to carry the scoring criteria, the roles one-liner, the honesty list, and pointers to the few files that mattered, never the whole plan set. A dispatch missing any of the first three was not a legal dispatch and was rewritten.
+
+The document also named the decline signals: skipping a reviewer because "it is small", the orchestrator writing product code "just this once", a rubber stamp on a spec-matching shrug, briefs getting shorter while diffs get sloppier, the same Important finding shipped twice. The response to any of them was to name it to the owner, restore the gate, and continue, and never to narrate a recovery that did not happen.
+
+### What generalizes
+
+- Fix the invariants and the review structure first. Vendors, model lineups, and process shape can change between releases without the bar moving.
+- Independence between builder and reviewer is structural. Separate context, separate prompt, adversarial framing. Different vendors add diversity but are not what makes the separation work.
+- Match review granularity to risk, not to the PR boundary. A security review per slice caught what a review per PR would have averaged away.
+- Recognition that fails toward success is a recurring defect class in any tool that reports state. Recognize only exact positive forms; everything else is "cannot verify".
+- Write the quality bar as a document the orchestrator pastes, not a habit it remembers.
+- Keep an append-only build log, dated, that records what became true and what is still not built. Do not rewrite it to look smoother than it was.
+
+Sources for this section: the usabl build logs, quality bars, and role definitions for both releases are public at [usabl-dev/usabl-plans](https://github.com/usabl-dev/usabl-plans) (`how-we-built-this.md`, `quality-bar.md`, `roles.md`, and the `v0.2.0/` versions of each). The product is at [usabl-dev/usabl](https://github.com/usabl-dev/usabl).
 
 ---
 
