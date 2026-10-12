@@ -44,6 +44,9 @@ Practices should meet at least one of these bars:
 - Independently converged by multiple practitioners.
 - Empirically researched with data.
 - Repeatedly observed across real projects.
+- Recorded as a dated incident on a real project, with the rule it produced.
+
+A practice that meets a bar still enters through the review in `PRACTICE-LIFECYCLE.md`: candidate, reviewed, trial where the claim is testable, then promotion by a human. The bar says what counts as evidence; the lifecycle says how it is checked.
 
 When adding sources, prefer primary sources, practitioner posts with concrete workflows, or project artifacts that show the practice in use. Avoid generic listicles.
 
@@ -52,7 +55,7 @@ When adding sources, prefer primary sources, practitioner posts with concrete wo
 - Markdown only; keep formatting simple.
 - Use short headings and tight paragraphs.
 - Keep examples small and copy-pasteable.
-- ASCII punctuation only. No em dashes and no doubled hyphens as punctuation anywhere in the repo; use a period, comma, colon, semicolon, or parentheses.
+- No em dashes and no doubled hyphens as punctuation anywhere in the repo; use a period, comma, colon, semicolon, or parentheses. Straight quotes. Section signs and arrows in existing text are fine.
 - Plain, direct sentences. Avoid the "not X, but Y" construction as a stylistic tic; state what is true.
 - Do not add broad rewrites unless explicitly requested.
 - Do not duplicate advice across sections; cross-reference or sharpen the existing section instead.

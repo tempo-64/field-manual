@@ -122,6 +122,8 @@ Prefer the strongest durable form that fits the claim. A security requirement sh
 
 ## 7. Distribute
 
+This stage applies when guidance is delivered to assistants by a runtime, for example a local hook or a context pack. If your practices live only in documents, skip to stage 8.
+
 Distribute practices with:
 
 - Version and source identity.

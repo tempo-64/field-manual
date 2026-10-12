@@ -10,6 +10,14 @@ Practical engineering with AI coding agents, grounded in evidence. The practices
 
 **Product shaping:** hand [PRODUCT-DIRECTOR-MODE.md](PRODUCT-DIRECTOR-MODE.md) to any assistant when the product is still an idea. It tells the assistant how to propose business rules, present real options, and ask only for the decisions that change the product.
 
+## The first hour
+
+1. Copy [STARTER-CLAUDE-MD.md](STARTER-CLAUDE-MD.md) into your project and fill in the environment, conventions, and security sections.
+2. Write a one-page [product brief](templates/product-brief.md).
+3. Write one [work packet](templates/work-packet.md) for the first complete slice.
+4. Run the build loop in [METHOD.md](METHOD.md) section 11: failing test, implement, gates, diff, commit, stop for review.
+5. Read [FIELD-MANUAL.md](FIELD-MANUAL.md) section 7 before you call anything done.
+
 ## What's here
 
 | File | Job |

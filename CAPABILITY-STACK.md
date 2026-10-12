@@ -44,7 +44,7 @@ Evidence and human decision
 
 ## Identity and workspace isolation
 
-Separate work and personal coding-agent contexts on one machine when account or data crossover would be costly: separate credentials, git identity, files, history, and agent state. Containers, separate user accounts, or dedicated machines all serve. This reduces accidental crossover. It is not a security boundary against a hostile kernel exploit.
+Separate coding-agent contexts that must not mix (for example, employer and personal, or two clients) on one machine when account or data crossover would be costly: separate credentials, git identity, files, history, and agent state. Containers, separate user accounts, or dedicated machines all serve. This reduces accidental crossover. It is not a security boundary against a hostile kernel exploit.
 
 ## Local guidance and efficiency observation
 
@@ -56,7 +56,7 @@ A local substrate below several coding assistants that measures cost, activity, 
 
 ## Durable orchestration
 
-A workflow engine that coordinates human and agent product work across restarts: explicit builder and reviewer roles, persistent state, handoffs, returns, reviews, and decisions, visible blockers and retries, cost and time limits, stop controls, review panels, isolated worker cells, and integration gates. Models interpret assignments. The state machine owns lifecycle truth.
+A workflow engine that coordinates human and agent product work across restarts: explicit builder and reviewer roles, persistent state, handoffs, returns, reviews, and decisions, visible blockers and retries, cost and time limits, stop controls, review panels, isolated workers, and integration gates. Models interpret assignments. The state machine owns lifecycle truth.
 
 ## Local harnesses
 

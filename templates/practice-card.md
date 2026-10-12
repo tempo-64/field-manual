@@ -41,7 +41,7 @@ Candidate
 ## Review
 
 - Reviewer: [human]
-- Decision: [candidate, trial, prove, reject]
+- Decision: [candidate, reviewed, trial, proved, rejected, or retired]
 - Reason: [reason]
 
 ## Expiry and revalidation

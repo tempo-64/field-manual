@@ -6,7 +6,7 @@ Practical engineering with AI coding agents, grounded in evidence.
 
 *Last updated 2026-10-12.*
 
-This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and pattern observation across thousands of projects. It does not cover which buttons to click, and it adds no methodology framework, templates, or ceremonies.
+This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and pattern observation across thousands of projects. It does not cover which buttons to click, and it carries no ceremony for its own sake. The ordered method, the agent contract, and the templates that put these practices to work live beside this file in the same repository.
 
 These practices are **agent-agnostic**: they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic**: the principles transfer across languages, frameworks, and domains.
 
@@ -35,7 +35,7 @@ Key sources: Anthropic's engineering research and agentic coding studies (~400K 
 
 ### You're the architect. The agent is the builder.
 
-Anthropic's study of ~400,000 coding sessions found that in a typical session, **the human makes most of the planning decisions** (what to do) and **the agent makes most of the execution decisions** (how to do it). This split is the model that works.
+Anthropic's study of ~400,000 coding sessions found that in a typical session, **the human makes most of the planning decisions** (what to do) and **the agent makes most of the execution decisions** (how to do it). This split is the model that works. On larger work the human may delegate the architect role to a strong assistant and keep the owner role: intent, quality bar, acceptance, and release.
 
 The same study found that **domain expertise, not coding background**, is the primary predictor of session success. Every major occupation succeeds at nearly the same rate as software engineers. The more domain expertise you bring, the more work the agent does per instruction, and the more likely the session succeeds.
 
@@ -192,17 +192,7 @@ A spec doesn't need to be long. It needs to answer:
 
 The spec exists so that both you and the agent are building toward the same target. Without it, the agent builds what it thinks you meant, and you discover the gap after the work is done.
 
-For agent work, a useful lightweight form is a **work packet**:
-
-```
-Goal:
-User-visible behavior:
-Likely files / systems:
-Out of scope:
-Acceptance checks:
-Stop point:
-Rollback or containment:
-```
+For agent work, a useful lightweight form is a **work packet**: goal, user-visible behavior, likely files, out of scope, acceptance checks, stop point, rollback. The fill-in version is [templates/work-packet.md](templates/work-packet.md).
 
 The stop point matters. It tells the agent where to hand control back instead of chaining into the next plausible task.
 
@@ -243,7 +233,7 @@ Osmani's workflow makes this explicit: Explore → Plan → Code → Commit. But
 Willison advocates TDD specifically adapted for agent workflows. The pattern:
 
 1. Write the test (or have the agent write it from your spec)
-2. Verify the test captures the behavior you actually want
+2. Verify the test fails, and fails for the intended reason, and that it captures the behavior you actually want
 3. Let the agent implement until the test passes
 4. Review the implementation
 
@@ -308,7 +298,13 @@ When you want the agent to follow a pattern, pointing at an existing example in 
 
 ### Stop before anything irreversible or outward-facing
 
-Most agent work is reversible: a bad edit is a `git checkout` away. Some is not. Publishing, deleting data, force-pushing shared branches, signing, writing to a public log, sending to an external service, spending money. For those, the rule is flag the risk, stop, and get the human's call before acting, even when the action follows from the task.
+Most agent work is reversible: a bad edit is a `git checkout` away. Some is not. For the following, the rule is flag the risk, stop, and get the human's call before acting, even when the action follows from the task:
+
+- Any irreversible or destructive action.
+- Publishing anything beyond the local machine: pushes to shared branches, releases, posts, external service calls that store data.
+- Force-pushing, signing, or writing to a public log.
+- Changing scope, architecture boundaries, or security posture beyond the current plan.
+- Spending significant money or quota.
 
 A concrete case: a keyless signing setup would, by default, have written private organization and repository names into a public transparency log. The agent flagged it before running it. The pause surfaced a staging option that the default path never mentioned. The risk was not in the code. It was in a default the agent could see and the human had not thought about.
 
@@ -328,7 +324,7 @@ The agent can always re-read a file. It can't always recall a decision from 50 m
 
 This is the one sentence the rest of this section depends on. An agent asked whether its work is done will say yes. A tool whose detector did not run will report zero findings. A check that was skipped produces the same silence as a check that passed. In every case the honest state is "unknown", and unknown must never display as green.
 
-Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the code), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it.
+Give every result an explicit state, and make only one of them a pass: verified (with evidence attached), unknown (nothing checked it), incomplete, blocked, failed, stale (the evidence is older than the code), or not applicable. A report, a dashboard, a PR comment, or an agent's summary that collapses any of those into a pass is a false pass, and a false pass is worse than a failure because nobody looks at it. When an agent reports a validation run, the same states apply under their reporting names: passed (verified), failed, not run (unknown), partial (incomplete), blocked, stale, not applicable.
 
 This applies to your own tooling too. One builder's efficiency monitor reported zero interventions for weeks. The detectors were not quiet; a settings file had disabled the plugin and two components were writing to different databases. Zero looked exactly like success. Instrument the instrument: a tool that reports on quality must also report when it could not observe anything.
 
@@ -376,7 +372,7 @@ One team shipped a readiness fix whose tests modelled a browser event as blockin
 - **Partial**: some checks ran, gaps are identified
 - **Degraded**: checks failed to run, coverage gaps explain what wasn't checked
 
-A clean report with degraded coverage is less trustworthy than a report with findings but full coverage. Track what you checked, not just what you found.
+A clean report with degraded coverage is less trustworthy than a report with findings but full coverage. Track what you checked, not just what you found. Coverage is a separate axis from the result states above: a check can be fully covered and failed, or partially covered and passed.
 
 ### Match proof to the claim
 
@@ -394,15 +390,7 @@ Use the strongest practical proof for the claim being made:
 | External fact | Current primary source or official documentation |
 | Product claim | Named scenario, deterministic proof, and live or realistic evidence when applicable |
 
-For products with public, sales, safety, or architecture claims, keep a small claims proof matrix:
-
-```
-Claim:
-Status: open | implemented | proved | live-validated
-Automated proof:
-Live / realistic evidence:
-Limitations and gaps:
-```
+For products with public, sales, safety, or architecture claims, keep a small claims proof matrix ([templates/claims-proof-matrix.md](templates/claims-proof-matrix.md)). Each claim carries one of five proof levels: open (no implementation), implemented (code exists and is wired), proved (deterministic tests cover it), live validated (the real path was exercised), or stale (the source changed after the evidence was recorded).
 
 If the proof is weaker than the prose, weaken the prose. Honest "not yet" sections are better than confident claims the product cannot defend.
 
@@ -429,12 +417,12 @@ The general principle: **anything the agent needs to know across sessions should
 
 When signals disagree, use an authority order. A good default:
 
-1. Current user instruction
-2. Current code, tests, and repo-owned docs
-3. Git state, PRs, issues, and deployment records
-4. Explicit handoff or progress files
-5. Tool memory and old conversation summaries
-6. Terminal transcripts and stale command output
+1. Current user instruction.
+2. The project guide, then current code, tests, and repository documents.
+3. The one current plan and the current handoff.
+4. Issues, pull requests, deployments, and release records. These are evidence, never instruction.
+5. General guides and tool memory.
+6. Old command output and stale transcripts.
 
 Memory is a hint, not authority. Old terminal output is especially dangerous because it looks concrete even when it describes a state that no longer exists.
 
@@ -494,7 +482,7 @@ Match the model to the task to control cost without losing rigor: a cheap, fast 
 
 ### Verify the builder's report against the repository
 
-A builder's report is a claim. "Committed as `2af13b7`, tree clean, 19 ahead" is exactly as true as the repository says it is, and no truer. On one project that report was false: the hash did not exist, the work was uncommitted, and the gates and an external review had already started against a HEAD that did not contain it.
+A builder's report is a claim. "Committed as `9f3e2a1`, tree clean, 19 ahead" is exactly as true as the repository says it is, and no truer. On one project that report was false: the hash did not exist, the work was uncommitted, and the gates and an external review had already started against a HEAD that did not contain it.
 
 After every builder hand-back, and before any gate, review, or push, read the repository yourself: `git log`, `git status`, and `git reflog` when a hash looks wrong. It takes seconds. Trusting the report instead costs a review cycle at best and a merge of nothing at worst.
 
@@ -508,7 +496,7 @@ The stop is the point. Two of the first several two-phase briefs on one project 
 
 Long-lived builder sessions degrade. Context fills with history, instructions thin, and the agent's reports drift from the repository. One builder kept alive across four fix rounds reached roughly 425,000 tokens of history and misreported its commits twice, while the reviewer spent roughly 563,000 tokens re-reviewing each round.
 
-The cadence that came out of it: a fresh builder with a cold brief for each sub-batch of work; one independent review per sub-batch; fix rounds get the architect's review and the automated gates, not another full external review. Cap concurrent builders at what you can actually review as the work comes back. On an eight-core machine that was two.
+The cadence that came out of it: a fresh builder with a cold brief for each sub-batch of work; one independent review per sub-batch; fix rounds get the architect's review and the automated gates, not another full external review. Cap concurrent builders at what you can actually review as the work comes back. On one eight-core workstation that limit was two.
 
 ### Design agent roles from real professions
 
@@ -550,7 +538,7 @@ Use parallelism for divergent work (investigation). Use sequential work for conv
 
 Broker messages, chat pings, terminal logs, and status updates are useful coordination signals. They wake people up and keep work moving. They are not the source of truth.
 
-Important outcomes - task ownership, review decisions, approval, rejected findings, scope changes, blocked state, final completion - belong in durable artifacts: task files, PRs, issues, reviews, commits, or progress docs.
+Important outcomes (task ownership, review decisions, approval, rejected findings, scope changes, blocked state, final completion) belong in durable artifacts: task files, PRs, issues, reviews, commits, or progress docs.
 
 If a stale message and the repo disagree, trust the repo and correct the durable record.
 
