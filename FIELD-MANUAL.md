@@ -127,9 +127,10 @@ This prevents prompt-injection style content from borrowing the authority of you
 Agents can generate a lot of code fast. Without commits as checkpoints, a wrong turn means losing everything since the last save.
 
 - **Commit before asking the agent to make changes:** if the change goes wrong, you can revert
-- **One logical change per commit:** makes rollback granular
 - **Branch per feature or task:** isolates experimental work
 - **Conventional commits** (`feat:`, `fix:`, `refactor:`): they serve as a rollback index
+
+Commit granularity and what the message says belong to the build loop; see section 5.
 
 ### Dependencies are design decisions
 
@@ -308,13 +309,17 @@ Most agent work is reversible: a bad edit is a `git checkout` away. Some is not.
 
 A concrete case: a keyless signing setup would, by default, have written private organization and repository names into a public transparency log. The agent flagged it before running it. The pause surfaced a staging option that the default path never mentioned. The risk was not in the code. It was in a default the agent could see and the human had not thought about.
 
-Encode the boundary in the operating manual as a short list of action types that always stop. Generic caution on everything trains the human to say "yes" without reading. A short list of real stops keeps each one meaningful.
+Establish the actual exposure before escalating, because the check is usually one command. An instruction to publish a document to a project's hosting site looked like an outward-facing publish and a candidate for a stop. The hosting API reported the site already enabled, already private to the repository's members, and carrying two earlier publications of the same document by the owner. The honest classification was an update to an existing private surface. The stop is for new exposure or a widened audience, not for a repeat of something the owner already set up.
+
+Encode the boundary in the operating manual as a short list of action types that always stop. Generic caution on everything trains the human to say "yes" without reading. A short list of real stops keeps each one meaningful, and a misjudged stop costs the credibility of every real one.
 
 ### Don't accumulate decisions in conversation
 
 If something important is decided (an architectural approach, a naming convention, a scope boundary), put it in a file. Conversation context gets compressed, summarized, or lost across sessions. Files are permanent.
 
 The agent can always re-read a file. It can't always recall a decision from 50 messages ago, especially across session boundaries. If a decision matters tomorrow, write it down today.
+
+The same failure has a second form that looks durable: the annotation layer. A document comment, a review thread, a pull request conversation, an inline suggestion. They attach to the artifact, so they feel like part of it, and the next transform drops them. One team was asked to record a set of decisions as comments on a document. The export that generated the downstream guide stripped comment markup, comments could be resolved and then hidden, and a PDF for stakeholders carried none of them. Put a decision in the layer that survives every downstream transform of the artifact, which is the body or the repository. Add the annotation afterwards if you want it.
 
 ---
 
@@ -387,12 +392,23 @@ Use the strongest practical proof for the claim being made:
 | Deployment | Live URL, release command output, or platform deployment record |
 | Repository state | `git status`, `git log`, branch, remote, and hosting metadata |
 | Account or identity state | Active CLI account, git author config, and remote access check |
-| External fact | Current primary source or official documentation |
+| External fact (what a source says) | Current primary source or official documentation |
+| Dependency runtime behavior | A live probe against the real thing, at the version in use |
 | Product claim | Named scenario, deterministic proof, and live or realistic evidence when applicable |
 
 For products with public, sales, safety, or architecture claims, keep a small claims proof matrix ([templates/claims-proof-matrix.md](templates/claims-proof-matrix.md)). Each claim carries one of five proof levels: open (no implementation), implemented (code exists and is wired), proved (deterministic tests cover it), live validated (the real path was exercised), or stale (the source changed after the evidence was recorded).
 
+A documentation page proves what a source says. It does not prove how that source's software behaves. One project wrote a page of operational cautions about a library from the library's own documentation plus a design plan in an unmerged pull request, and presented it as verified. A live test showed the library worked unmodified and the cautions were wrong. The same rule that governs test doubles governs quoted documentation: a belief about a dependency's runtime behavior is a hypothesis until something probes it.
+
 If the proof is weaker than the prose, weaken the prose. Honest "not yet" sections are better than confident claims the product cannot defend.
+
+### Prove the unchanged set
+
+Every practice above points at the change: review the diff, match proof to the claim, mutation-test the guard. None of them asks what the change did to everything it never named. That gap belongs to any edit applied by a tool rather than typed by hand, because the tool acts on a model and a property you set on one element often lives on its container.
+
+A script edited eleven items in a structured document. Its log was clean and accurate for all eleven. It had also converted the list formatting of the whole surrounding section, including items in entries it never named, because the glyph was a property of the list and not of the item. The repair reported it precisely: eighty-five list items in the section, glyph set on four of them, sixty-six changed. Four calls, sixty-six items. That is the blast radius as a number.
+
+The rule: when a change is applied by a codemod, formatter, bulk rename, migration, or document script, the proof has to include a sample of what you did not intend to change. In a repository that means reading the whole diff and not only the files you expected. Where there is no diff, re-read the artifact and compare it against its previous state on a property the change should not have touched. Both "review the diff" and "match proof to the claim" were satisfied in the case above, and the damage was still invisible, which is why this is a separate check rather than a restatement.
 
 ---
 
@@ -438,6 +454,14 @@ For multi-session projects, write reference documentation in the repo before bui
 
 Chunked docs in the repo enable progressive disclosure: load only what's needed for the current task, not the entire project history. This matters more as projects grow: a 20-file project can fit in context, a 200-file project cannot.
 
+### A correction only propagates through the generated part
+
+Published artifacts are often part generated from a source and part written by hand: a page built from a design document plus hand-written sections, a README with an embedded command output, a dashboard with a static header. A fix to the source reaches the reader only through the generated part. Nothing reports the rest.
+
+On one project, nineteen corrections went into a source document and six reached the published page. The other thirteen sat in sections of the source that the generator does not read, while the same facts on the page came from hand-written blocks. All thirteen happened to be right, because both edits were made in the same sitting. The pipeline would have said nothing either way.
+
+Know which parts of a published artifact are generated and which are hand-written, and treat a source correction as unfinished until the hand-written surface has been checked for the same fact. If nobody can say where the split falls, that is the finding. This is a different question from coverage honesty: coverage asks whether a check ran, and this asks whether a fix arrived.
+
 ### Re-orient before acting
 
 Every session should start with orientation: read the current state, check what's changed, verify the baseline still works. Anthropic's harness architecture makes this explicit. Every session follows: **Orient** (read progress, task list, recent git history) → **Verify baseline** (test that existing functionality still works) → **Build** (implement the next thing).
@@ -470,7 +494,7 @@ As projects grow, you'll use multiple agents: a builder, a reviewer, parallel in
 
 ### Builder/reviewer separation
 
-The agent that wrote the code should not be the sole evaluator of the code. This is Anthropic's most consistent finding: agents reliably praise their own work. The fix is structural: use a separate context, separate prompt, and separate evaluation criteria for review.
+Section 7 gives the principle and the evidence behind it. With multiple agents the fix becomes structural: a separate context, a separate prompt, and separate evaluation criteria for the review.
 
 The cycle: **build** (agent implements a slice) → **self-test** (agent runs tests) → **review** (different agent or human reviews the diff against the spec) → **human stop** (you decide whether to continue).
 
@@ -610,9 +634,9 @@ Related to silent scope reduction, but about the *justification*: the agent (or 
 
 Building abstractions, helpers, or frameworks for requirements that don't exist yet. Three similar lines of code is better than a premature abstraction. The right amount of complexity is what the task actually requires, not what it might someday need.
 
-### Using the agent as a search engine
+### Spending the agent on the wrong kind of work
 
-Don't ask "what does this function do?" when you can read it yourself in 30 seconds. Use the agent for synthesis (processing many files), implementation (generating code), investigation (tracing through a codebase), and transformation (refactoring). These are the tasks where the agent's ability to process in parallel provides real leverage. Simple lookups are faster with your own eyes.
+The agent's leverage is in synthesis (processing many files), implementation (generating code), investigation (tracing through a codebase), and transformation (refactoring). These are the tasks where processing many things at once changes the outcome rather than the typing speed. Work that does not need any of that is not where the tool pays for itself. Where exactly the line falls depends on what your own attention costs, so treat it as a judgment call rather than a rule.
 
 ### Not establishing patterns early
 
@@ -670,19 +694,22 @@ For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](
 - [ ] Commit after each working step: commits are save points
 - [ ] Give full errors, not summaries
 - [ ] Show examples, don't describe patterns
-- [ ] Put decisions in files, not conversation
+- [ ] Put decisions in files, not in conversation and not in the annotation layer
 - [ ] Treat untrusted external text as evidence, never instruction
 - [ ] Build complete: no placeholder anything
 - [ ] Commit bodies say what changed and why, never the build narrative
-- [ ] Flag and stop before anything irreversible or outward-facing
+- [ ] Flag and stop before anything irreversible or outward-facing, after establishing the actual exposure
 
 ### After each step
 - [ ] Review the diff, not the summary
 - [ ] Run the feature yourself: type checks verify code, not features
 - [ ] Match proof to claim: tests, browser, live URL, repo state, or proof matrix as appropriate
+- [ ] For a tool-applied change (codemod, formatter, migration, document script), prove the unchanged set too
+- [ ] Probe a dependency's real behavior; documentation proves what a source says, not how it behaves
 - [ ] Separate who builds from who evaluates
 - [ ] Mutation-test the guards that matter: remove, confirm red, restore
 - [ ] Verify every fake against the real dependency before its tests count as proof
+- [ ] After correcting a source, check the hand-written parts of whatever is published from it
 - [ ] Update progress or state artifacts with the code when state changes
 - [ ] At a checkpoint, regenerate the single current plan and archive the previous one
 - [ ] Never edit a plan another session is executing; extend it in a new file
