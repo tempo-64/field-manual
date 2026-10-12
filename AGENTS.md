@@ -6,10 +6,24 @@ This repo contains "The Solo Builder's Field Manual": a concise, agent-agnostic 
 
 ## Files
 
-- `FIELD-MANUAL.md` - the main guide, worked example, case study, and source list.
-- `STARTER-CLAUDE-MD.md` - copy-paste starter template for `CLAUDE.md` / `AGENTS.md`.
-- `README.md` - short repo overview.
-- `LICENSE` - CC BY 4.0 license text.
+- `FIELD-MANUAL.md` - the practices, their evidence, the worked example, the case study, and the source list. Slow-changing.
+- `METHOD.md` - the ordered method for the human owner. States steps; links to the manual for the why.
+- `AGENT-CONTRACT.md` - the portable operating contract handed to an assistant on a product. Not this file.
+- `PRODUCT-DIRECTOR-MODE.md` - the product-shaping contract.
+- `STARTER-CLAUDE-MD.md` - project operating guide template.
+- `CHECKLISTS.md` - checkpoint checklists for the method.
+- `PRACTICE-LIFECYCLE.md` - how techniques enter and leave guidance.
+- `CAPABILITY-STACK.md` - capability layers, adoption ladder, trust boundaries. Capabilities, never brands or private tool names.
+- `templates/` - fill-in artifacts. `examples/` - a worked slice and anonymized lessons.
+- `README.md`, `LICENSE` (CC BY 4.0), and this file.
+
+## Where things belong
+
+- A practice with its evidence and the reason it works: `FIELD-MANUAL.md`.
+- A step, an order, a list to run through: `METHOD.md` or `CHECKLISTS.md`. State it once; link to the manual for the why. Do not restate the manual's reasoning in the method or the reasoning's steps in the manual.
+- A fill-in artifact: `templates/`. The manual never carries templates.
+- A rule an assistant must follow on any project: `AGENT-CONTRACT.md`. A rule for editing this repo: this file.
+- Real project lore, private tool names, personal workflow: nowhere in this repo. Generalize the lesson first or leave it out.
 
 ## Working Principles
 

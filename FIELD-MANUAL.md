@@ -4,6 +4,8 @@ Practical engineering with AI coding agents, grounded in evidence.
 
 ## What This Is
 
+*Last updated 2026-10-12.*
+
 This is a field manual for software engineers who build real products with AI coding agents: a concise set of practices that actually work, drawn from research, practitioner experience, and pattern observation across thousands of projects. It does not cover which buttons to click, and it adds no methodology framework, templates, or ceremonies.
 
 These practices are **agent-agnostic**: they apply whether you're using Claude Code, Cursor, Copilot, Codex, Windsurf, or whatever ships next month. They're also **stack-agnostic**: the principles transfer across languages, frameworks, and domains.
@@ -11,6 +13,8 @@ These practices are **agent-agnostic**: they apply whether you're using Claude C
 **Who this is for:** A software engineer (any level) working with one or more AI coding agents to build software that other people will use. "Solo builder" means you're the human. You might have multiple agents, but you're the one with the vision, the taste, and the accountability.
 
 **Who this is not for:** Teams building AI agents themselves, managers evaluating AI tools, or people looking for a specific tool tutorial.
+
+This file is the practices and the evidence. The same repository carries the method that orders them ([METHOD.md](METHOD.md)), the contract you hand an assistant ([AGENT-CONTRACT.md](AGENT-CONTRACT.md)), a product-shaping mode ([PRODUCT-DIRECTOR-MODE.md](PRODUCT-DIRECTOR-MODE.md)), checklists, and templates. Read this file first; the rest assumes it.
 
 ## Where These Practices Come From
 
@@ -651,6 +655,8 @@ Agents are good at making product language sound complete. That creates a subtle
 ## 12. The Practices at a Glance
 
 A one-page reference for the practices in this guide, ordered by when they matter.
+
+For checkpoint checklists keyed to the steps of the method, see [CHECKLISTS.md](CHECKLISTS.md).
 
 ### Before you start
 - [ ] Write your operating manual (CLAUDE.md / AGENTS.md): concise, specific, context over rules
